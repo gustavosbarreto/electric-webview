@@ -17,7 +17,7 @@ implementations to get some clue.
 Before building Instant WebView you need Qt 5.5 installed on the system.
 
 ```
-$ qmake
+$ qmake PREFIX=/usr
 $ make
 $ make install
 ```
