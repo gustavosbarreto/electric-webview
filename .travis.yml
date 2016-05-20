@@ -1,10 +1,18 @@
 sudo: required
 dist: trusty
 language: cpp
+cache: apt
+
 compiler:
   - gcc
-script: qmake && make
 
-before_install:
- - sudo apt-get update -qq
- - sudo apt-get install -qq qt5-default
+install:
+  - sudo apt-get update -qq
+  - sudo apt-add-repository -y ppa:beineri/opt-qt56-trusty
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq qt56tools qt56script qt56webengine qt56webchannel qt56declarative qt56x11extras
+
+script:
+  - /opt/qt56/bin/qmake
+  - $QMAKE QMAKE_CXXFLAGS+="-Wextra -Werror"
+  - make || exit 1
