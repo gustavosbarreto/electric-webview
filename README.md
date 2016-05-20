@@ -30,7 +30,8 @@ by IPC mechanism, use the `--transport` option to that.
 Example:
 
 ```
-instant-webview --transport tcp
+$ instant-webview --transport tcp
+$ echo "open http://google.com" | socat - tcp-connect:localhost:38395
 ```
 
 # Commands
