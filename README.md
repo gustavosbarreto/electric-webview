@@ -1,5 +1,7 @@
 # Introduction
 
+[![Build Status](https://travis-ci.org/gustavosbarreto/instant-webview.svg?branch=master)](https://travis-ci.org/gustavosbarreto/instant-webview)
+
 Instant WebView is a web browser which has no UI controls. You can interact with
 them through inter-process communication (IPC).
 
