@@ -21,3 +21,7 @@ SOURCES += \
 HEADERS += \
     eventmanager.hpp \
     commandhandler.hpp
+
+target.path = $$PREFIX/bin
+
+INSTALLS += target
