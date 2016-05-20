@@ -13,6 +13,5 @@ install:
   - sudo apt-get install -qq qt56tools qt56script qt56webengine qt56webchannel qt56declarative qt56x11extras
 
 script:
-  - /opt/qt56/bin/qmake
-  - $QMAKE QMAKE_CXXFLAGS+="-Wextra -Werror"
+  - /opt/qt56/bin/qmake QMAKE_CXXFLAGS+="-Wextra -Werror"
   - make || exit 1
