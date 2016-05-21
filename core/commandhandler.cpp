@@ -14,7 +14,7 @@ CommandHandler::CommandHandler(QObject *parent)
 
 void CommandHandler::processCommand(QPointer<IpcClient> client, QString command, QStringList args)
 {
-    if (command == "open") {
+    if (command == "load") {
         if (args.isEmpty())
             m_eventManager->webView()->load(QUrl("about:blank"));
         else
