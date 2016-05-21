@@ -38,6 +38,10 @@ $ echo "load http://google.com" | socat - tcp-connect:localhost:38395
 
 # Commands
 
+Instant WebView will read commands via TCP or Unix Socket. Each command command starts
+with the name of a command and is terminated by a newline. Empty line are interpreted
+as end of connection.
+
 ## Navigation
 
 * `load <URL>`
