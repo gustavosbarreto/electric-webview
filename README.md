@@ -14,6 +14,17 @@ You can implement another IPC transport layer inheriting the
 `IpcTransportLayer` abstract class. See the existing IPC transport
 implementations to get some clue.
 
+# Use Cases
+
+* Web testing
+  - Browser automated testing done easy.
+* Page automation
+  - Access and manipulate web pages using DOM API.
+* Digital Signage
+  - Display Web content without distractions.
+* Kiosk Web Browser
+  - The users can only interact with a single web application.
+
 # Building
 
 Before building Instant WebView you need Qt 5.5 installed on the system.
