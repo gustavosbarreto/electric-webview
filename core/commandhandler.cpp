@@ -19,6 +19,15 @@ void CommandHandler::processCommand(QPointer<IpcClient> client, QString command,
             m_eventManager->webView()->load(QUrl("about:blank"));
         else
             m_eventManager->webView()->load(QUrl(args.first()));
+    } else if (command == "open") {
+        QString mode = args.first();
+
+        if (mode == "maximized")
+            m_eventManager->webView()->showMaximized();
+        else if (mode == "fullscreen")
+            m_eventManager->webView()->showFullScreen();
+    } else if (command == "close") {
+        m_eventManager->webView()->close();
     } else if (command == "current_url") {
         client->write(m_eventManager->webView()->url().toString().toLocal8Bit());
         client->write("\n");

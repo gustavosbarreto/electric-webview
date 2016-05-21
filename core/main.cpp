@@ -48,7 +48,5 @@ int main(int argc, char *argv[])
 
     QObject::connect(ipcServer, &IpcServer::newCommand, commandHandler, &CommandHandler::processCommand);
 
-    webView->showMaximized();
-
     return app.exec();
 }

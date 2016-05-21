@@ -44,7 +44,7 @@ Example:
 
 ```
 $ instant-webview --transport tcp
-$ echo "load http://google.com" | socat - tcp-connect:localhost:38395
+$ echo -e "open maximized\nload http://google.com" | socat - tcp-connect:localhost:38395
 ```
 
 # Commands
@@ -57,6 +57,15 @@ as end of connection.
 
 * `load <URL>`
   - Loads the specified `URL`.
+
+## Window
+
+* `open <maximized|fullscreen>`
+  - Open the window. If `maximized` is given, the window is open in maximized
+    state, otherwise `fullscreen` is given, the window is open in fullscreen mode.
+
+* `close`
+  - Closes the window.
 
 ## Page
 
