@@ -33,7 +33,7 @@ Example:
 
 ```
 $ instant-webview --transport tcp
-$ echo "open http://google.com" | socat - tcp-connect:localhost:38395
+$ echo "load http://google.com" | socat - tcp-connect:localhost:38395
 ```
 
 # Commands
