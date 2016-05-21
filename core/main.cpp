@@ -12,6 +12,7 @@
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
+    app.setQuitOnLastWindowClosed(false);
     app.setApplicationName("instant-webview");
     app.setApplicationVersion("1.0");
 
