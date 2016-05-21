@@ -21,6 +21,8 @@ void CommandHandler::processCommand(QPointer<IpcClient> client, QString command,
             m_eventManager->webView()->load(QUrl(args.first()));
     } else if (command == "stop") {
         m_eventManager->webView()->stop();
+    } else if (command == "reload") {
+        m_eventManager->webView()->reload();
     } else if (command == "open") {
         QString mode = args.first();
 

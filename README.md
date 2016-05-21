@@ -61,6 +61,9 @@ as end of connection.
 * `stop`
   - Stops loading the document.
 
+* `reload`
+  - Reloads the current document.
+
 ## Window
 
 * `open <maximized|fullscreen>`
