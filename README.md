@@ -58,6 +58,9 @@ as end of connection.
 * `load <URL>`
   - Loads the specified `URL`.
 
+* `stop`
+  - Stops loading the document.
+
 ## Window
 
 * `open <maximized|fullscreen>`
