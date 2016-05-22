@@ -23,6 +23,10 @@ void CommandHandler::processCommand(QPointer<IpcClient> client, QString command,
         m_eventManager->webView()->stop();
     } else if (command == "reload") {
         m_eventManager->webView()->reload();
+    } else if (command == "back") {
+        m_eventManager->webView()->back();
+    } else if (command == "forward") {
+        m_eventManager->webView()->forward();
     } else if (command == "open") {
         QString mode = args.first();
 

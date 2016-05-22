@@ -64,6 +64,12 @@ as end of connection.
 * `reload`
   - Reloads the current document.
 
+* `back`
+  - Loads the previous document in the list of documents built by navigating links.
+
+* `forward`
+  - Loads the next document in the list of documents built by navigating links.
+
 ## Window
 
 * `open <maximized|fullscreen>`
