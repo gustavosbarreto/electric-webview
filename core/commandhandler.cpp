@@ -59,6 +59,7 @@ void CommandHandler::processCommand(QPointer<IpcClient> client, QString command,
         QStringList events = QStringList()
                 << "title_changed"
                 << "url_changed"
+                << "load_started"
                 << "load_finished";
 
         if (events.contains(event))

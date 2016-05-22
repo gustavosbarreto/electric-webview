@@ -109,5 +109,7 @@ as end of connection.
   - This event is fired when the url chages.
 * `title_changed`
   - This event is fired whenever the title changes.
+* `load_started`
+  - This event is fired when a page starts loading content.
 * `load_finished`
   - This event is fired when a load of the page has finished.

@@ -25,6 +25,13 @@ void EventManager::bind()
         }
     });
 
+    // load_started EVENT
+    connect(m_webView, &QWebEngineView::loadStarted, [=]() {
+        foreach (IpcClient *client, m_subscribers["load_started"]) {
+            client->write("load_started\n");
+        }
+    });
+
     // load_finished EVENT
     connect(m_webView, &QWebEngineView::loadFinished, [=](bool ok) {
         foreach (IpcClient *client, m_subscribers["load_finished"]) {
