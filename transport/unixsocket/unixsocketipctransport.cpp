@@ -16,6 +16,8 @@ void UnixSocketIpcTransport::initialize()
     if (name.isEmpty())
         name = "instant-webview";
 
+    QLocalServer::removeServer(name);
+
     m_server = new QLocalServer;
     m_server->listen(name);
 
