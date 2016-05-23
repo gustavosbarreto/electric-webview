@@ -1,4 +1,4 @@
-QT = gui widgets webenginewidgets network
+QT = gui widgets webenginewidgets websockets network
 
 CONFIG += c++11
 
@@ -8,7 +8,8 @@ INCLUDEPATH += \
     $$PWD/../ipc \
     $$PWD/../transport \
     $$PWD/../transport/tcp \
-    $$PWD/../transport/unixsocket
+    $$PWD/../transport/unixsocket \
+    $$PWD/../transport/websocket
 
 include($$PWD/../transport/transport.pri)
 include($$PWD/../ipc/ipc.pri)

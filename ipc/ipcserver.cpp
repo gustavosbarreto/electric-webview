@@ -9,6 +9,7 @@
 
 #include "tcpipctransport.hpp"
 #include "unixsocketipctransport.hpp"
+#include "websocketipctransport.hpp"
 
 IpcServer::IpcServer(QObject *parent)
     : QObject(parent)
@@ -24,7 +25,8 @@ void IpcServer::initialize()
     QString transportLayerName = transportOptions.first();
     QStringList supportedTransportLayers = QStringList()
                                            << "tcp"
-                                           << "unixsocket";
+                                           << "unixsocket"
+                                           << "websocket";
 
     if (!supportedTransportLayers.contains(transportLayerName)) {
         qDebug().noquote() << "Invalid IPC transport layer";
@@ -40,6 +42,8 @@ void IpcServer::initialize()
             m_reverseTransport = TcpIpcClient::newClient(transportOptions);
         else if (transportLayerName == "unixsocket")
             m_reverseTransport = UnixSocketIpcClient::newClient(transportOptions);
+        else if (transportLayerName == "websocket")
+            m_reverseTransport = WebSocketIpcClient::newClient(transportOptions);
 
         connect(m_reverseTransport, &IpcClient::connected, [=]() {
             // Send identification message to the server
@@ -54,6 +58,8 @@ void IpcServer::initialize()
             m_transportLayer = new TcpIpcTransport;
         else if (transportLayerName == "unixsocket")
             m_transportLayer = new UnixSocketIpcTransport;
+        else if (transportLayerName == "websocket")
+            m_transportLayer = new WebSocketIpcTransport;
 
         m_transportLayer->setOptions(transportOptions);
         m_transportLayer->initialize();

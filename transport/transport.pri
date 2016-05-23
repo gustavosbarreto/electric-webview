@@ -13,3 +13,11 @@ SOURCES += \
 
 HEADERS += \
     $$PWD/unixsocket/unixsocketipctransport.hpp
+
+# WebSocket
+
+SOURCES += \
+    $$PWD/websocket/websocketipctransport.cpp
+
+HEADERS += \
+    $$PWD/websocket/websocketipctransport.hpp

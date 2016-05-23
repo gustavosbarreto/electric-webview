@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
     cmdParser.setApplicationDescription("Instant WebView is a web browser which has no UI controls.");
     cmdParser.addHelpOption();
     cmdParser.addVersionOption();
-    cmdParser.addOption(QCommandLineOption(QStringList() << "t" << "transport", "IPC Transport Layer to use.", "tcp|unixsocket"));
+    cmdParser.addOption(QCommandLineOption(QStringList() << "t" << "transport", "IPC Transport Layer to use.", "tcp|unixsocket|websocket"));
     cmdParser.addOption(QCommandLineOption(QStringList() << "r" << "reverse", "Enable reverse mode. The ID is used to identify your session in the server.", "ID"));
     cmdParser.process(app);
 

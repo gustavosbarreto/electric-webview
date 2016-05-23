@@ -9,6 +9,7 @@ Currently, we support the following IPC transport layers:
 
 * TCP
 * Unix Socket
+* WebSocket
 
 You can implement another IPC transport layer inheriting the
 `IpcTransportLayer` abstract class. See the existing IPC transport
@@ -55,8 +56,8 @@ $ echo -e "open maximized\nload http://google.com" | socat - unix-connect:/tmp/i
 
 # Commands
 
-Instant WebView will read commands via TCP or Unix Socket. Each command command starts
-with the name of a command and is terminated by a newline. Empty line are interpreted
+Instant WebView will read commands via TCP, Unix Socket or WebSocket. Each command command
+starts with the name of a command and is terminated by a newline. Empty line are interpreted
 as end of connection.
 
 ## Navigation
