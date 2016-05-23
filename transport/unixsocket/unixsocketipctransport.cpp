@@ -77,13 +77,26 @@ IpcClient *UnixSocketIpcClient::newClient(const QStringList &args)
     options["name"] = args.value(1);
 
     QLocalSocket *socket = new QLocalSocket();
-    socket->connectToServer(options["name"].toString());
 
     UnixSocketIpcClient *client = new UnixSocketIpcClient;
     client->setSocket(socket);
     client->initialize();
 
-    connect(socket, SIGNAL(connected()), client, SIGNAL(connected()));
+    connect(socket, &QLocalSocket::connected, [client, options]() {
+        qInfo().noquote() << QString("unixsocket: Connected to %1").arg(options["name"].toString());
+        emit client->connected();
+    });
+
+    connect(socket, &QLocalSocket::disconnected, [options]() {
+        qInfo().noquote() << QString("unixsocket: Disconnected from %1").arg(options["name"].toString());
+    });
+
+    connect(socket, static_cast<void(QLocalSocket::*)(QLocalSocket::LocalSocketError)>(&QLocalSocket::error), [options](QLocalSocket::LocalSocketError e) {
+        Q_UNUSED(e);
+        qDebug().noquote() << QString("unixsocket: Failed to connect to %1").arg(options["name"].toString());
+    });
+
+    socket->connectToServer(options["name"].toString());
 
     return client;
 }

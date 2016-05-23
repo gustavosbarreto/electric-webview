@@ -79,13 +79,26 @@ IpcClient *TcpIpcClient::newClient(const QStringList &args)
     options["port"] = args.value(2);
 
     QTcpSocket *socket = new QTcpSocket();
-    socket->connectToHost(options["host"].toString(), options["port"].toUInt());
 
     TcpIpcClient *client = new TcpIpcClient;
     client->setSocket(socket);
     client->initialize();
 
-    connect(socket, SIGNAL(connected()), client, SIGNAL(connected()));
+    connect(socket, &QTcpSocket::connected, [client, options]() {
+        qInfo().noquote() << QString("tcp: Connected to %1:%2").arg(options["host"].toString()).arg(options["port"].toString());
+        emit client->connected();
+    });
+
+    connect(socket, &QTcpSocket::disconnected, [options]() {
+        qInfo().noquote() << QString("tcp: Disconnected from %1:%2").arg(options["host"].toString()).arg(options["port"].toString());
+    });
+
+    connect(socket, static_cast<void(QAbstractSocket::*)(QAbstractSocket::SocketError)>(&QTcpSocket::error), [options](QAbstractSocket::SocketError e) {
+        Q_UNUSED(e);
+        qDebug().noquote() << QString("tcp: Failed to connect to %1:%2").arg(options["host"].toString()).arg(options["port"].toString());
+    });
+
+    socket->connectToHost(options["host"].toString(), options["port"].toUInt());
 
     return client;
 }
