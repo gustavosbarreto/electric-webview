@@ -43,8 +43,8 @@ by IPC mechanism, use the `--transport` option to that.
 Example:
 
 ```
-$ instant-webview --transport tcp
-$ echo -e "open maximized\nload http://google.com" | socat - tcp-connect:localhost:38395
+$ instant-webview --transport unixsocket
+$ echo -e "open maximized\nload http://google.com" | socat - unix-connect:/tmp/instant-webview
 ```
 
 # Commands
