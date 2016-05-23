@@ -25,6 +25,12 @@ implementations to get some clue.
 * Kiosk Web Browser
   - The users can only interact with a single web application.
 
+# Reverse IPC
+
+With reverse IPC, the Instant WebView accept commands from remote IPC server
+instead of accepting commands from IPC clients. This is useful for controlling
+the browser remotely. To enable reverse IPC pass `"--reverse"` in the cmdline.
+
 # Building
 
 Before building Instant WebView you need Qt 5.5 installed on the system.
