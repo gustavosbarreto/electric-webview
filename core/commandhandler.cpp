@@ -28,7 +28,7 @@ void CommandHandler::processCommand(QPointer<IpcClient> client, QString command,
     } else if (command == "forward") {
         m_eventManager->webView()->forward();
     } else if (command == "open") {
-        QString mode = args.first();
+        QString mode = args.value(0);
 
         if (mode == "maximized")
             m_eventManager->webView()->showMaximized();
@@ -55,7 +55,7 @@ void CommandHandler::processCommand(QPointer<IpcClient> client, QString command,
         client->write(m_eventManager->webView()->title().toLocal8Bit());
         client->write("\n");
     } else if (command == "subscribe") {
-        QString event = args.first();
+        QString event = args.value(0);
         QStringList events = QStringList()
                 << "title_changed"
                 << "url_changed"
