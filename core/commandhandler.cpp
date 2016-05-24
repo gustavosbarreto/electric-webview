@@ -3,6 +3,7 @@
 #include <QWebEngineView>
 #include <QFile>
 #include <QEventLoop>
+#include <QBuffer>
 
 #include "ipcclient.hpp"
 #include "eventmanager.hpp"
@@ -54,6 +55,8 @@ void CommandHandler::processCommand(QPointer<IpcClient> client, QString command,
     } else if (command == "current_title") {
         client->write(m_eventManager->webView()->title().toLocal8Bit());
         client->write("\n");
+    } else if (command == "screenshot") {
+        processScreenshotCommand(client, args);
     } else if (command == "subscribe") {
         QString event = args.value(0);
         QStringList events = QStringList()
@@ -73,6 +76,30 @@ void CommandHandler::setEventManager(EventManager *eventManager)
 {
     m_eventManager = eventManager;
 }
+
+void CommandHandler::processScreenshotCommand(QPointer<IpcClient> client, QStringList args)
+{
+    QStringList region = args.value(0).split(',');
+
+    int x = region.value(0).toInt();
+    int y = region.value(1).toInt();
+    int width = region.value(2).toInt();
+    int height = region.value(3).toInt();
+
+    QRect rect = QRect(QPoint(x, y), QSize(width, height));
+
+    if (rect.isNull() || !rect.isValid())
+        rect = QRect(QPoint(0, 0), QSize(-1, -1));
+
+    QByteArray data;
+    QBuffer buffer(&data);
+
+    QPixmap pixmap = m_eventManager->webView()->grab(rect);
+    pixmap.save(&buffer, "JPG");
+
+    client->write(data.toBase64());
+}
+
 
 void CommandHandler::processJavaScriptCommand(QPointer<IpcClient> client, QStringList args)
 {

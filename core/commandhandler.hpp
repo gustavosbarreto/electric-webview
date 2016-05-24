@@ -19,6 +19,7 @@ public:
     void setEventManager(EventManager *eventManager);
 
 private:
+    void processScreenshotCommand(QPointer<IpcClient> client, QStringList args);
     void processJavaScriptCommand(QPointer<IpcClient> client, QStringList args);
 
 private:

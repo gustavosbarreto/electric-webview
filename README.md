@@ -92,6 +92,9 @@ as end of connection.
   - Returns the URL of the web page currently viewed.
 * `current_title`
   - Returns the title of the web page currently viewed.
+* `screenshot [REGION]`
+  - Take a screenshot of the web page currenly viewed and send base64 encoded JPG.
+    If `[REGION]` is given, restrict the screenshot by the given region `(x,y,width,height)`.
 
 ## Content
 
