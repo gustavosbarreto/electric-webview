@@ -128,3 +128,38 @@ The single-shot event subscription might be used to wait until an event is fired
   - This event is fired when a page starts loading content.
 * `load_finished`
   - This event is fired when a load of the page has finished.
+
+# Examples
+
+**Basic Example**
+
+Open a maximized window and load google.com:
+
+```sh
+echo "open maximized" | nc -U /tmp/instant-webview
+echo "load http://google.com" | nc -U /tmp/instant-webview
+```
+
+**Screenshot Example**
+
+Open a maximized window, load google.com and wait until load is finished
+to take a screenshot:
+
+```sh
+echo "open maximized" | nc -U /tmp/instant-webview
+echo -e "subscribe @load_finished\nload http://google.com" | nc -q -1 -U /tmp/instant-webview
+echo -e "screenshot\n" | nc -U /tmp/instant-webview | base64 --decode > screenshot.jpg
+```
+
+**Browser History Example**
+
+Open a maximized window, subscribe to url_changed event, wait until it
+is fired then append the URL to /tmp/history.txt
+
+```sh
+echo "open maximized" | nc -U /tmp/instant-webview
+while true; do
+  URL=$(echo -e "subscribe @url_changed" | nc -q -1 -U /tmp/instant-webview)
+  echo "$URL" >> /tmp/history.txt
+done
+```
