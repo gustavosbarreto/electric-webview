@@ -111,7 +111,12 @@ as end of connection.
 ## Events
 
 * `subscribe <VALUE>`
-  - Subscribe to specified event in `VALUE`.
+  - Subscribe to specified event in `VALUE`. If `VALUE` starts with `@` the
+    subscription is marked as single-shot.
+
+### Single-shot event subscription
+
+The single-shot event subscription might be used to wait until an event is fired.
 
 ### Available events
 
