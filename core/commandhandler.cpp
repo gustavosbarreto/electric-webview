@@ -13,36 +13,35 @@ CommandHandler::CommandHandler(QObject *parent)
 {
 }
 
-void CommandHandler::processCommand(QPointer<IpcClient> client, QString command, QStringList args)
+void CommandHandler::processCommand(const Command &command) const
 {
-    if (command == "load") {
-        if (args.isEmpty())
+    if (command.name() == "load") {
+        if (command.arguments().isEmpty())
             m_eventManager->webView()->load(QUrl("about:blank"));
         else
-            m_eventManager->webView()->load(QUrl(args.first()));
-    } else if (command == "stop") {
+            m_eventManager->webView()->load(QUrl(command.arguments().first()));
+    } else if (command.name() == "stop") {
         m_eventManager->webView()->stop();
-    } else if (command == "reload") {
+    } else if (command.name() == "reload") {
         m_eventManager->webView()->reload();
-    } else if (command == "back") {
+    } else if (command.name() == "back") {
         m_eventManager->webView()->back();
-    } else if (command == "forward") {
+    } else if (command.name() == "forward") {
         m_eventManager->webView()->forward();
-    } else if (command == "open") {
-        QString mode = args.value(0);
+    } else if (command.name() == "open") {
+        QString mode = command.arguments().value(0);
 
         if (mode == "maximized")
             m_eventManager->webView()->showMaximized();
         else if (mode == "fullscreen")
             m_eventManager->webView()->showFullScreen();
-    } else if (command == "close") {
+    } else if (command.name() == "close") {
         m_eventManager->webView()->close();
-    } else if (command == "current_url") {
-        client->write(m_eventManager->webView()->url().toString().toLocal8Bit());
-        client->write("\n");
-    } else if (command == "set_html") {
-        QString type = args.value(0);
-        QString value = args.value(1);
+    } else if (command.name() == "current_url") {
+        command.sendResponse(m_eventManager->webView()->url().toString().toLocal8Bit());
+    } else if (command.name() == "set_html") {
+        QString type = command.arguments().value(0);
+        QString value = command.arguments().value(1);
 
         if (type == "string") {
             m_eventManager->webView()->page()->setHtml(value.toLocal8Bit());
@@ -52,23 +51,27 @@ void CommandHandler::processCommand(QPointer<IpcClient> client, QString command,
 
             m_eventManager->webView()->page()->setHtml(file.readAll());
         }
-    } else if (command == "current_title") {
-        client->write(m_eventManager->webView()->title().toLocal8Bit());
-        client->write("\n");
-    } else if (command == "screenshot") {
-        processScreenshotCommand(client, args);
-    } else if (command == "subscribe") {
-        QString event = args.value(0);
+    } else if (command.name() == "current_title") {
+        command.sendResponse(m_eventManager->webView()->title().toLocal8Bit());
+    } else if (command.name() == "screenshot") {
+        processScreenshotCommand(command);
+    } else if (command.name() == "subscribe") {
+        QString eventName = command.arguments().value(0);
         QStringList events = QStringList()
                 << "title_changed"
                 << "url_changed"
                 << "load_started"
                 << "load_finished";
 
-        if (events.contains(event) || (event.startsWith('@') && events.contains(event.mid(1))))
-            m_eventManager->subscribe(event, client);
-    } else if (command == "js") {
-        processJavaScriptCommand(client, args);
+        if (events.contains(eventName)) {
+            Event event;
+            event.setName(eventName);
+            event.setSubscriptionCommand(command);
+
+            m_eventManager->subscribe(event);
+        }
+    } else if (command.name() == "js") {
+        processJavaScriptCommand(command);
     }
 }
 
@@ -77,9 +80,9 @@ void CommandHandler::setEventManager(EventManager *eventManager)
     m_eventManager = eventManager;
 }
 
-void CommandHandler::processScreenshotCommand(QPointer<IpcClient> client, QStringList args)
+void CommandHandler::processScreenshotCommand(const Command &command) const
 {
-    QStringList region = args.value(0).split(',');
+    QStringList region = command.arguments().value(0).split(',');
 
     int x = region.value(0).toInt();
     int y = region.value(1).toInt();
@@ -97,21 +100,25 @@ void CommandHandler::processScreenshotCommand(QPointer<IpcClient> client, QStrin
     QPixmap pixmap = m_eventManager->webView()->grab(rect);
     pixmap.save(&buffer, "JPG");
 
-    client->write(data.toBase64());
+    command.sendResponse(data.toBase64());
 }
 
 
-void CommandHandler::processJavaScriptCommand(QPointer<IpcClient> client, QStringList args)
+void CommandHandler::processJavaScriptCommand(const Command &command) const
 {
-    QString type = args.value(0);
-    QString value = args.value(1);
+    QString type = command.arguments().value(0);
+    QString value = command.arguments().value(1);
 
     QEventLoop loop;
 
     // Process JavaScript response from Web View and tells the even loop to exit
-    auto processJavaScriptResponse = [client, &loop](const QVariant &out) mutable {
-        if (!client.isNull())
-            client->write(out.toByteArray() + "\n");
+    auto processJavaScriptResponse = [&command, &loop](const QVariant &out) mutable {
+        if (!command.client().isNull()) {
+            command.sendResponse(out.toByteArray());
+
+            if (command.isSingleShot())
+                command.client()->close();
+        }
         loop.quit();
     };
 

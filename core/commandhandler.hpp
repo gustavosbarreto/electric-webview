@@ -4,6 +4,8 @@
 #include <QObject>
 #include <QPointer>
 
+#include "command.hpp"
+
 class IpcClient;
 class EventManager;
 
@@ -14,13 +16,13 @@ class CommandHandler: public QObject
 public:
     CommandHandler(QObject *parent = 0);
 
-    void processCommand(QPointer<IpcClient> client, QString command, QStringList args);
+    void processCommand(const Command &command) const;
 
     void setEventManager(EventManager *eventManager);
 
 private:
-    void processScreenshotCommand(QPointer<IpcClient> client, QStringList args);
-    void processJavaScriptCommand(QPointer<IpcClient> client, QStringList args);
+    void processScreenshotCommand(const Command &command) const;
+    void processJavaScriptCommand(const Command &command) const;
 
 private:
     EventManager *m_eventManager;

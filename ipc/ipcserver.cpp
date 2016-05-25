@@ -118,14 +118,21 @@ void IpcServer::parseData(QPointer<IpcClient> client, const QByteArray &data)
             insideQuote = !insideQuote;
         }
 
-        QString command = args.first();
-        QStringList commandArgs = args.mid(1, -1);
+        Command cmd;
+        cmd.setName(args.first());
+        cmd.setArguments(args.mid(1, -1));
+        cmd.setClient(client);
+        cmd.setSingleShot(args.first().startsWith('@'));
 
-        emit newCommand(client, command, commandArgs);
+        if (cmd.isSingleShot())
+            cmd.setName(cmd.name().mid(1));
+
+        emit newCommand(cmd);
     }
 
     // A empty new line closes the client connection
     if (lines.mid(lines.size() - 2).first().isEmpty()) {
-        client->close();
+        if (!client.isNull())
+            client->close();
     }
 }

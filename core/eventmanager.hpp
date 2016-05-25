@@ -5,6 +5,8 @@
 #include <QMap>
 #include <QList>
 
+#include "event.hpp"
+
 class QWebEngineView;
 
 class IpcClient;
@@ -17,14 +19,14 @@ public:
     EventManager(QObject *parent = 0);
 
     void bind();
-    void subscribe(const QString &event, IpcClient *client);
+    void subscribe(const Event &event);
 
     QWebEngineView *webView();
     void setWebView(QWebEngineView *view);
 
 private:
     QWebEngineView *m_webView;
-    QMap<QString, QList<IpcClient *> > m_subscribers;
+    QMap<QString, QList<Event> > m_subscribers;
 };
 
 #endif // EVENTMANAGER_HPP

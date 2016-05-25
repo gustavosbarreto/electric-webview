@@ -51,14 +51,40 @@ Example:
 
 ```
 $ instant-webview --transport unixsocket
-$ echo -e "open maximized\nload http://google.com" | socat - unix-connect:/tmp/instant-webview
+$ echo -e "open maximized\nload http://google.com" | nc -U /tmp/instant-webview
 ```
 
 # Commands
 
-Instant WebView will read commands via TCP, Unix Socket or WebSocket. Each command command
-starts with the name of a command and is terminated by a newline. Empty line are interpreted
+Instant WebView will read commands via TCP, Unix Socket or WebSocket. Each command starts
+with the name of a command and is terminated by a newline. Empty line are interpreted
 as end of connection.
+
+If the command starts with `@` the command is marked as single-shot.
+
+## Single-shot commands
+
+Single-shot commands might be used to wait until command response is received.
+It might be useful to get data from the Instant WebView using the netcat utility.
+
+Example:
+
+```sh
+URL=$(echo "@current_url" | nc -q -1 -U /tmp/instant-webview)
+echo "The current URL is $URL"
+```
+
+In the below example the command ```@current_url``` is sent and the netcat waits
+forever for the response. After response is received, the connection is closed.
+
+## Command response
+
+The response of a command may vary according the type of command. If the command is
+marked as single-shot, the response only contains the returned data from the command,
+otherwise it is not a single-shot command, the response is composed of the command
+name and returned data, separated by space.
+
+**Note that not all commands have a response.**
 
 ## Navigation
 
@@ -111,12 +137,7 @@ as end of connection.
 ## Events
 
 * `subscribe <VALUE>`
-  - Subscribe to specified event in `VALUE`. If `VALUE` starts with `@` the
-    subscription is marked as single-shot.
-
-### Single-shot event subscription
-
-The single-shot event subscription might be used to wait until an event is fired.
+  - Subscribe to specified event in `VALUE`.
 
 ### Available events
 
@@ -147,19 +168,19 @@ to take a screenshot:
 
 ```sh
 echo "open maximized" | nc -U /tmp/instant-webview
-echo -e "subscribe @load_finished\nload http://google.com" | nc -q -1 -U /tmp/instant-webview
-echo -e "screenshot\n" | nc -U /tmp/instant-webview | base64 --decode > screenshot.jpg
+echo -e "@subscribe load_finished\nload http://google.com" | nc -q -1 -U /tmp/instant-webview
+echo -e "@screenshot" | nc -q -1 -U /tmp/instant-webview | base64 --decode > screenshot.jpg
 ```
 
 **Browser History Example**
 
 Open a maximized window, subscribe to url_changed event, wait until it
-is fired then append the URL to /tmp/history.txt
+is fired then append the URL to /tmp/history.txt:
 
 ```sh
 echo "open maximized" | nc -U /tmp/instant-webview
 while true; do
-  URL=$(echo -e "subscribe @url_changed" | nc -q -1 -U /tmp/instant-webview)
+  URL=$(echo -e "@subscribe url_changed" | nc -q -1 -U /tmp/instant-webview)
   echo "$URL" >> /tmp/history.txt
 done
 ```
