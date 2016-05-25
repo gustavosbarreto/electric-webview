@@ -13,29 +13,73 @@ void EventManager::bind()
 {
     // url_changed EVENT
     connect(m_webView, &QWebEngineView::urlChanged, [=](const QUrl &url) {
-        foreach (IpcClient *client, m_subscribers["url_changed"]) {
-            client->write(QString("url_changed %1\n").arg(url.toString()).toUtf8());
+        QStringList events = QStringList() << "url_changed" << "@url_changed";
+
+        foreach (const QString &event, events) {
+            foreach (IpcClient *client, m_subscribers[event]) {
+                bool isSingleShot = event.startsWith('@');
+
+                if (isSingleShot) {
+                    client->write(QString("%1\n").arg(url.toString()).toUtf8());
+                    client->close();
+                } else {
+                    client->write(QString("url_changed %1\n").arg(url.toString()).toUtf8());
+                }
+            }
         }
     });
 
     // title_changed EVENT
     connect(m_webView, &QWebEngineView::titleChanged, [=](const QString &title) {
-        foreach (IpcClient *client, m_subscribers["title_changed"]) {
-            client->write(QString("title_changed %1\n").arg(title).toUtf8());
+        QStringList events = QStringList() << "title_changed" << "@title_changed";
+
+        foreach (const QString &event, events) {
+            foreach (IpcClient *client, m_subscribers[event]) {
+                bool isSingleShot = event.startsWith('@');
+
+                if (isSingleShot) {
+                    client->write(QString("%1\n").arg(title).toUtf8());
+                    client->close();
+                } else {
+                    client->write(QString("title_changed %1\n").arg(title).toUtf8());
+                }
+            }
         }
     });
 
     // load_started EVENT
     connect(m_webView, &QWebEngineView::loadStarted, [=]() {
-        foreach (IpcClient *client, m_subscribers["load_started"]) {
-            client->write("load_started\n");
+        QStringList events = QStringList() << "load_started" << "@load_started";
+
+        foreach (const QString &event, events) {
+            foreach (IpcClient *client, m_subscribers[event]) {
+                bool isSingleShot = event.startsWith('@');
+
+                if (isSingleShot) {
+                    client->write(QString("\n").toUtf8());
+                    client->close();
+                } else {
+                    client->write(QString("load_started\n").toUtf8());
+                }
+            }
         }
     });
 
     // load_finished EVENT
     connect(m_webView, &QWebEngineView::loadFinished, [=](bool ok) {
-        foreach (IpcClient *client, m_subscribers["load_finished"]) {
-            client->write(QString("load_finished %1\n").arg(ok).toUtf8());
+        QStringList events = QStringList() << "load_finished" << "@load_finished";
+
+        foreach (const QString &event, events) {
+            foreach (IpcClient *client, m_subscribers[event]) {
+                bool isSingleShot = event.startsWith('@');
+
+                if (isSingleShot) {
+                    client->write(QString("%1\n").arg(ok).toUtf8());
+                    client->close();
+                } else {
+                    client->write(QString("load_finished %1\n").arg(ok).toUtf8());
+                }
+            }
         }
     });
 }

@@ -65,7 +65,7 @@ void CommandHandler::processCommand(QPointer<IpcClient> client, QString command,
                 << "load_started"
                 << "load_finished";
 
-        if (events.contains(event))
+        if (events.contains(event) || (event.startsWith('@') && events.contains(event.mid(1))))
             m_eventManager->subscribe(event, client);
     } else if (command == "js") {
         processJavaScriptCommand(client, args);
