@@ -34,7 +34,7 @@ the browser remotely. To enable reverse IPC pass `"--reverse"` in the cmdline.
 
 # Building
 
-Before building Instant WebView you need Qt 5.5 installed on the system.
+Before building Instant WebView you need Qt and QtWebEngine 5.6 installed on the system.
 
 ```
 $ qmake PREFIX=/usr
