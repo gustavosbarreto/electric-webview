@@ -17,6 +17,8 @@ public:
 
     static IpcClient *newClient(const QStringList &args);
 
+protected:
+
 signals:
     void connected();
     void newData(const QByteArray &data);

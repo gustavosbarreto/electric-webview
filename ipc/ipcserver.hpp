@@ -7,6 +7,7 @@
 #include <QPointer>
 
 #include "ipcclient.hpp"
+#include "command.hpp"
 
 class QTcpServer;
 class QTcpSocket;
@@ -30,7 +31,7 @@ public:
     void sendReply(QPointer<IpcClient> client, const QByteArray &data);
 
 signals:
-    void newCommand(QPointer<IpcClient> client, QString command, QStringList args);
+    void newCommand(const Command &command);
 
 private:
     void parseData(QPointer<IpcClient> client, const QByteArray &data);

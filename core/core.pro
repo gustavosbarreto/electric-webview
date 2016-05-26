@@ -17,11 +17,15 @@ include($$PWD/../ipc/ipc.pri)
 SOURCES += \
     main.cpp \
     eventmanager.cpp \
-    commandhandler.cpp
+    commandhandler.cpp \
+    command.cpp \
+    event.cpp
 
 HEADERS += \
     eventmanager.hpp \
-    commandhandler.hpp
+    commandhandler.hpp \
+    command.hpp \
+    event.hpp
 
 target.path = $$PREFIX/bin
 
