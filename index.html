@@ -79,7 +79,7 @@ the browser remotely. To enable reverse IPC pass <code>"--reverse"</code> in the
 <h1>
 <a id="building" class="anchor" href="#building" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Building</h1>
 
-<p>Before building Instant WebView you need Qt and QtWebEngine 5.6 installed on the system.</p>
+<p>Before building Instant WebView you need GCC 6, Qt and QtWebEngine 5.6 installed on the system.</p>
 
 <pre><code>$ qmake PREFIX=/usr
 $ make
@@ -95,15 +95,41 @@ by IPC mechanism, use the <code>--transport</code> option to that.</p>
 <p>Example:</p>
 
 <pre><code>$ instant-webview --transport unixsocket
-$ echo -e "open maximized\nload http://google.com" | socat - unix-connect:/tmp/instant-webview
+$ echo -e "open maximized\nload http://google.com" | nc -U /tmp/instant-webview
 </code></pre>
 
 <h1>
 <a id="commands" class="anchor" href="#commands" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Commands</h1>
 
-<p>Instant WebView will read commands via TCP, Unix Socket or WebSocket. Each command command
-starts with the name of a command and is terminated by a newline. Empty line are interpreted
+<p>Instant WebView will read commands via TCP, Unix Socket or WebSocket. Each command starts
+with the name of a command and is terminated by a newline. Empty line are interpreted
 as end of connection.</p>
+
+<p>If the command starts with <code>@</code> the command is marked as single-shot.</p>
+
+<h2>
+<a id="single-shot-commands" class="anchor" href="#single-shot-commands" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Single-shot commands</h2>
+
+<p>Single-shot commands might be used to wait until command response is received.
+It might be useful to get data from the Instant WebView using the netcat utility.</p>
+
+<p>Example:</p>
+
+<div class="highlight highlight-source-shell"><pre>URL=<span class="pl-s"><span class="pl-pds">$(</span><span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>@current_url<span class="pl-pds">"</span></span> <span class="pl-k">|</span> nc -q -1 -U /tmp/instant-webview<span class="pl-pds">)</span></span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>The current URL is <span class="pl-smi">$URL</span><span class="pl-pds">"</span></span></pre></div>
+
+<p>In the below example the command <code>@current_url</code> is sent and the netcat waits
+forever for the response. After response is received, the connection is closed.</p>
+
+<h2>
+<a id="command-response" class="anchor" href="#command-response" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Command response</h2>
+
+<p>The response of a command may vary according the type of command. If the command is
+marked as single-shot, the response only contains the returned data from the command,
+otherwise it is not a single-shot command, the response is composed of the command
+name and returned data, separated by space.</p>
+
+<p><strong>Note that not all commands have a response.</strong></p>
 
 <h2>
 <a id="navigation" class="anchor" href="#navigation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Navigation</h2>
@@ -227,16 +253,10 @@ is executed as JavaScript code.</li>
 <code>subscribe &lt;VALUE&gt;</code>
 
 <ul>
-<li>Subscribe to specified event in <code>VALUE</code>. If <code>VALUE</code> starts with <code>@</code> the
-subscription is marked as single-shot.</li>
+<li>Subscribe to specified event in <code>VALUE</code>.</li>
 </ul>
 </li>
 </ul>
-
-<h3>
-<a id="single-shot-event-subscription" class="anchor" href="#single-shot-event-subscription" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Single-shot event subscription</h3>
-
-<p>The single-shot event subscription might be used to wait until an event is fired.</p>
 
 <h3>
 <a id="available-events" class="anchor" href="#available-events" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Available events</h3>
@@ -288,17 +308,17 @@ subscription is marked as single-shot.</li>
 to take a screenshot:</p>
 
 <div class="highlight highlight-source-shell"><pre><span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>open maximized<span class="pl-pds">"</span></span> <span class="pl-k">|</span> nc -U /tmp/instant-webview
-<span class="pl-c1">echo</span> -e <span class="pl-s"><span class="pl-pds">"</span>subscribe @load_finished\nload http://google.com<span class="pl-pds">"</span></span> <span class="pl-k">|</span> nc -q -1 -U /tmp/instant-webview
-<span class="pl-c1">echo</span> -e <span class="pl-s"><span class="pl-pds">"</span>screenshot\n<span class="pl-pds">"</span></span> <span class="pl-k">|</span> nc -U /tmp/instant-webview <span class="pl-k">|</span> base64 --decode <span class="pl-k">&gt;</span> screenshot.jpg</pre></div>
+<span class="pl-c1">echo</span> -e <span class="pl-s"><span class="pl-pds">"</span>@subscribe load_finished\nload http://google.com<span class="pl-pds">"</span></span> <span class="pl-k">|</span> nc -q -1 -U /tmp/instant-webview
+<span class="pl-c1">echo</span> -e <span class="pl-s"><span class="pl-pds">"</span>@screenshot<span class="pl-pds">"</span></span> <span class="pl-k">|</span> nc -q -1 -U /tmp/instant-webview <span class="pl-k">|</span> base64 --decode <span class="pl-k">&gt;</span> screenshot.jpg</pre></div>
 
 <p><strong>Browser History Example</strong></p>
 
 <p>Open a maximized window, subscribe to url_changed event, wait until it
-is fired then append the URL to /tmp/history.txt</p>
+is fired then append the URL to /tmp/history.txt:</p>
 
 <div class="highlight highlight-source-shell"><pre><span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>open maximized<span class="pl-pds">"</span></span> <span class="pl-k">|</span> nc -U /tmp/instant-webview
 <span class="pl-k">while</span> <span class="pl-c1">true</span><span class="pl-k">;</span> <span class="pl-k">do</span>
-  URL=<span class="pl-s"><span class="pl-pds">$(</span><span class="pl-c1">echo</span> -e <span class="pl-s"><span class="pl-pds">"</span>subscribe @url_changed<span class="pl-pds">"</span></span> <span class="pl-k">|</span> nc -q -1 -U /tmp/instant-webview<span class="pl-pds">)</span></span>
+  URL=<span class="pl-s"><span class="pl-pds">$(</span><span class="pl-c1">echo</span> -e <span class="pl-s"><span class="pl-pds">"</span>@subscribe url_changed<span class="pl-pds">"</span></span> <span class="pl-k">|</span> nc -q -1 -U /tmp/instant-webview<span class="pl-pds">)</span></span>
   <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$URL</span><span class="pl-pds">"</span></span> <span class="pl-k">&gt;&gt;</span> /tmp/history.txt
 <span class="pl-k">done</span></pre></div>
 
