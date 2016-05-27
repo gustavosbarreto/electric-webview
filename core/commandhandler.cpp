@@ -8,6 +8,7 @@
 #include "ipcclient.hpp"
 #include "eventmanager.hpp"
 #include "instantwebview.hpp"
+#include "inputeventfilter.hpp"
 
 CommandHandler::CommandHandler(QObject *parent)
     : QObject(parent)
