@@ -1,11 +1,9 @@
 #include "instantwebview.hpp"
 
 #include <QWebEngineView>
-#include <QCoreApplication>
 
 #include "commandhandler.hpp"
 #include "eventmanager.hpp"
-#include "inputeventfilter.hpp"
 
 InstantWebView *InstantWebView::instance()
 {
@@ -16,8 +14,6 @@ InstantWebView *InstantWebView::instance()
 void InstantWebView::initialize()
 {
     m_eventManager->bind();
-
-    qApp->installEventFilter(m_inputEventFilter);
 }
 
 InstantWebView::InstantWebView()
@@ -25,12 +21,6 @@ InstantWebView::InstantWebView()
     m_webView = new QWebEngineView();
     m_eventManager = new EventManager;
     m_commandHandler = new CommandHandler();
-    m_inputEventFilter = new InputEventFilter;
-}
-
-InputEventFilter *InstantWebView::inputEventFilter() const
-{
-    return m_inputEventFilter;
 }
 
 CommandHandler *InstantWebView::commandHandler() const
