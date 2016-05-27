@@ -58,7 +58,12 @@ void Command::sendResponse(const QByteArray &data) const
     if (m_client.isNull())
         return;
 
-    m_client->write(data + "\n");
+    QByteArray prefix;
+
+    if (!m_singleShot)
+        prefix = m_name.toLocal8Bit() + " ";
+
+    m_client->write(prefix + data + "\n");
 
     if (m_singleShot)
         m_client->close();
