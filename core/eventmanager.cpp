@@ -2,6 +2,7 @@
 
 #include <QWebEngineView>
 
+#include "instantwebview.hpp"
 #include "ipcclient.hpp"
 
 EventManager::EventManager(QObject *parent)
@@ -11,8 +12,10 @@ EventManager::EventManager(QObject *parent)
 
 void EventManager::bind()
 {
+    QWebEngineView *webView = InstantWebView::instance()->webView();
+
     // url_changed EVENT
-    connect(m_webView, &QWebEngineView::urlChanged, [=](const QUrl &url) {
+    connect(webView, &QWebEngineView::urlChanged, [=](const QUrl &url) {
         foreach (const Event &event, m_subscribers["url_changed"]) {
             if (event.subscriptionCommand().isSingleShot()) {
                 event.subscriptionCommand().sendResponse(QString("%1").arg(url.toString()).toUtf8());
@@ -23,7 +26,7 @@ void EventManager::bind()
     });
 
     // title_changed EVENT
-    connect(m_webView, &QWebEngineView::titleChanged, [=](const QString &title) {
+    connect(webView, &QWebEngineView::titleChanged, [=](const QString &title) {
         foreach (const Event &event, m_subscribers["title_changed"]) {
             if (event.subscriptionCommand().isSingleShot()) {
                 event.subscriptionCommand().sendResponse(QString("%1").arg(title).toUtf8());
@@ -34,7 +37,7 @@ void EventManager::bind()
     });
 
     // load_started EVENT
-    connect(m_webView, &QWebEngineView::loadStarted, [=]() {
+    connect(webView, &QWebEngineView::loadStarted, [=]() {
         foreach (const Event &event, m_subscribers["load_started"]) {
             if (event.subscriptionCommand().isSingleShot()) {
                 event.subscriptionCommand().sendResponse(QString("").toUtf8());
@@ -45,7 +48,7 @@ void EventManager::bind()
     });
 
     // load_finished EVENT
-    connect(m_webView, &QWebEngineView::loadFinished, [=](bool ok) {
+    connect(webView, &QWebEngineView::loadFinished, [=](bool ok) {
         foreach (const Event &event, m_subscribers["load_finished"]) {
             if (event.subscriptionCommand().isSingleShot()) {
                 event.subscriptionCommand().sendResponse(QString("%1").arg(ok).toUtf8());
@@ -64,14 +67,4 @@ void EventManager::subscribe(const Event &event)
     connect(event.subscriptionCommand().client(), &QObject::destroyed, [this, event]() {
         m_subscribers[event.name()].removeOne(event);
     });
-}
-
-QWebEngineView *EventManager::webView()
-{
-    return m_webView;
-}
-
-void EventManager::setWebView(QWebEngineView *webView)
-{
-    m_webView = webView;
 }

@@ -6,8 +6,8 @@
 #include <QDebug>
 
 #include "ipcserver.hpp"
-#include "eventmanager.hpp"
 #include "commandhandler.hpp"
+#include "instantwebview.hpp"
 
 int main(int argc, char *argv[])
 {
@@ -30,23 +30,15 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    QWebEngineView *webView = new QWebEngineView();
-    webView->load(QUrl("about:blank"));
-
-    EventManager *eventManager = new EventManager;
-    eventManager->setWebView(webView);
-    eventManager->bind();
-
     IpcServer *ipcServer = new IpcServer();
     ipcServer->setTransport(cmdParser.value("transport"));
     ipcServer->setReverse(cmdParser.isSet("reverse"));
     ipcServer->setReverseId(cmdParser.value("reverse"));
     ipcServer->initialize();
 
-    CommandHandler *commandHandler = new CommandHandler();
-    commandHandler->setEventManager(eventManager);
+    InstantWebView::instance()->initialize();
 
-    QObject::connect(ipcServer, &IpcServer::newCommand, commandHandler, &CommandHandler::processCommand);
+    QObject::connect(ipcServer, &IpcServer::newCommand, InstantWebView::instance()->commandHandler(), &CommandHandler::processCommand);
 
     return app.exec();
 }

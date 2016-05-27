@@ -7,7 +7,6 @@
 #include "command.hpp"
 
 class IpcClient;
-class EventManager;
 
 class CommandHandler: public QObject
 {
@@ -18,14 +17,9 @@ public:
 
     void processCommand(const Command &command) const;
 
-    void setEventManager(EventManager *eventManager);
-
 private:
     void processScreenshotCommand(const Command &command) const;
     void processJavaScriptCommand(const Command &command) const;
-
-private:
-    EventManager *m_eventManager;
 };
 
 #endif // COMMANDHANDLER_HPP

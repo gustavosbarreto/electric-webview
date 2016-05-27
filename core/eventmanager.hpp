@@ -21,9 +21,6 @@ public:
     void bind();
     void subscribe(const Event &event);
 
-    QWebEngineView *webView();
-    void setWebView(QWebEngineView *view);
-
 private:
     QWebEngineView *m_webView;
     QMap<QString, QList<Event> > m_subscribers;
