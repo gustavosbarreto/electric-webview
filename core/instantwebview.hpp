@@ -5,6 +5,7 @@ class QWebEngineView;
 
 class EventManager;
 class CommandHandler;
+class InputEventFilter;
 
 class InstantWebView
 {
@@ -16,6 +17,7 @@ public:
     QWebEngineView *webView() const;
     EventManager *eventManager() const;
     CommandHandler *commandHandler() const;
+    InputEventFilter *inputEventFilter() const;
 
 private:
     InstantWebView();
@@ -23,6 +25,7 @@ private:
     QWebEngineView *m_webView;
     EventManager *m_eventManager;
     CommandHandler *m_commandHandler;
+    InputEventFilter *m_inputEventFilter;
 };
 
 #endif // INSTANTWEBVIEW_HPP

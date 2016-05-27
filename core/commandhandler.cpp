@@ -8,6 +8,7 @@
 #include "ipcclient.hpp"
 #include "eventmanager.hpp"
 #include "instantwebview.hpp"
+#include "inputeventfilter.hpp"
 
 CommandHandler::CommandHandler(QObject *parent)
     : QObject(parent)
@@ -75,6 +76,8 @@ void CommandHandler::processCommand(const Command &command) const
         }
     } else if (command.name() == "js") {
         processJavaScriptCommand(command);
+    } else if (command.name() == "idle_time") {
+        command.sendResponse(QString("%1").arg(InstantWebView::instance()->inputEventFilter()->idle()).toLocal8Bit());
     }
 }
 

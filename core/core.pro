@@ -19,13 +19,17 @@ SOURCES += \
     eventmanager.cpp \
     commandhandler.cpp \
     command.cpp \
-    event.cpp
+    event.cpp \
+    inputeventfilter.cpp \
+    instantwebview.cpp
 
 HEADERS += \
     eventmanager.hpp \
     commandhandler.hpp \
     command.hpp \
-    event.hpp
+    event.hpp \
+    inputeventfilter.hpp \
+    instantwebview.hpp
 
 target.path = $$PREFIX/bin
 
