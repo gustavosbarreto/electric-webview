@@ -96,7 +96,9 @@ IpcClient *UnixSocketIpcClient::newClient(const QStringList &args)
         qDebug().noquote() << QString("unixsocket: Failed to connect to %1").arg(options["name"].toString());
     });
 
-    socket->connectToServer(options["name"].toString());
+    QTimer::singleShot(0, [socket, options]() {
+       socket->connectToServer(options["name"].toString());
+    });
 
     return client;
 }

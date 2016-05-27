@@ -98,7 +98,9 @@ IpcClient *TcpIpcClient::newClient(const QStringList &args)
         qDebug().noquote() << QString("tcp: Failed to connect to %1:%2").arg(options["host"].toString()).arg(options["port"].toString());
     });
 
-    socket->connectToHost(options["host"].toString(), options["port"].toUInt());
+    QTimer::singleShot(0, [socket, options]() {
+        socket->connectToHost(options["host"].toString(), options["port"].toUInt());
+    });
 
     return client;
 }

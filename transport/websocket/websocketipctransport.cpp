@@ -98,7 +98,9 @@ IpcClient *WebSocketIpcClient::newClient(const QStringList &args)
         qDebug().noquote() << QString("websocket: Failed to connect to %1:%2").arg(options["host"].toString()).arg(options["port"].toString());
     });
 
-    socket->open(QUrl(QString("ws://%1:%2").arg(options["host"].toString()).arg(options["port"].toString())));
+    QTimer::singleShot(0, [socket, options]() {
+        socket->open(QUrl(QString("ws://%1:%2").arg(options["host"].toString()).arg(options["port"].toString())));
+    });
 
     return client;
 }
