@@ -149,6 +149,10 @@ name and returned data, separated by space.
   - This event is fired when a page starts loading content.
 * `load_finished`
   - This event is fired when a load of the page has finished.
+* `user_activity <IDLE_TIME>`
+  - This event is fired when the user interacts with the input system through
+    keystrokes or mouse clicks. The `IDLE_TIME` is the time milliseconds since
+    last user activity.
 
 ## Instant WebView
 

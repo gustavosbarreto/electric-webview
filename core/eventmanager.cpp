@@ -4,6 +4,7 @@
 
 #include "instantwebview.hpp"
 #include "ipcclient.hpp"
+#include "inputeventfilter.hpp"
 
 EventManager::EventManager(QObject *parent)
     : QObject(parent)
@@ -54,6 +55,18 @@ void EventManager::bind()
                 event.subscriptionCommand().sendResponse(QString("%1").arg(ok).toUtf8());
             } else {
                 event.subscriptionCommand().sendResponse(QString("load_finished %1").arg(ok).toUtf8());
+            }
+        }
+    });
+
+    // user_activity EVENT
+    connect(InstantWebView::instance()->inputEventFilter(), &InputEventFilter::activity, [=](int idleTime) {
+        foreach (const Event &event, m_subscribers["user_activity"]) {
+            if (event.subscriptionCommand().isSingleShot()) {
+                event.subscriptionCommand().sendResponse(QString("%1").arg(idleTime).toUtf8());
+                m_subscribers[event.name()].removeOne(event);
+            } else {
+                event.subscriptionCommand().sendResponse(QString("user_activity %1").arg(idleTime).toUtf8());
             }
         }
     });

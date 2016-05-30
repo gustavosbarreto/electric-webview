@@ -13,6 +13,9 @@ public:
 
     int idle() const;
 
+signals:
+    void activity(int idleTime);
+
 private:
     virtual bool eventFilter(QObject *obj, QEvent *event);
 

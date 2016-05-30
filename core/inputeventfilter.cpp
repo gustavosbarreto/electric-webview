@@ -16,6 +16,7 @@ int InputEventFilter::idle() const
 bool InputEventFilter::eventFilter(QObject *obj, QEvent *event)
 {
     if (event->type() == QEvent::KeyPress || event->type() == QEvent::MouseMove) {
+        emit activity(m_idleTime.elapsed());
         m_idleTime.restart();
     }
 
