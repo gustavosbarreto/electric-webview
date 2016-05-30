@@ -1,6 +1,8 @@
 #ifndef INSTANTWEBVIEW_HPP
 #define INSTANTWEBVIEW_HPP
 
+#include <QString>
+
 class QWebEngineView;
 
 class EventManager;
@@ -13,6 +15,8 @@ public:
     static InstantWebView *instance();
 
     void initialize();
+
+    void runScript(const QString &fileName);
 
     QWebEngineView *webView() const;
     EventManager *eventManager() const;

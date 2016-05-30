@@ -40,5 +40,8 @@ int main(int argc, char *argv[])
 
     QObject::connect(ipcServer, &IpcServer::newCommand, InstantWebView::instance()->commandHandler(), &CommandHandler::processCommand);
 
+    if (cmdParser.isSet("script"))
+        InstantWebView::instance()->runScript(cmdParser.value("script"));
+
     return app.exec();
 }

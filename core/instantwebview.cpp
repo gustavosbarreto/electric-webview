@@ -2,6 +2,8 @@
 
 #include <QWebEngineView>
 #include <QCoreApplication>
+#include <QProcess>
+#include <QProcessEnvironment>
 
 #include "commandhandler.hpp"
 #include "eventmanager.hpp"
@@ -18,6 +20,14 @@ void InstantWebView::initialize()
     m_eventManager->bind();
 
     qApp->installEventFilter(m_inputEventFilter);
+}
+
+void InstantWebView::runScript(const QString &fileName)
+{
+    QProcessEnvironment env(QProcessEnvironment::systemEnvironment());
+
+    QProcess *process = new QProcess();
+    process->start("sh", QStringList() << fileName);
 }
 
 InstantWebView::InstantWebView()
