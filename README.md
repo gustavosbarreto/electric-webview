@@ -150,6 +150,11 @@ name and returned data, separated by space.
 * `load_finished`
   - This event is fired when a load of the page has finished.
 
+## Instant WebView
+
+* `idle_time`
+  - Returns the idle time from the last user input in milliseconds.
+
 # Examples
 
 **Basic Example**
