@@ -75,7 +75,8 @@ int main(int argc, char *argv[])
     });
 
     QObject::connect(client, &IpcClient::newData, [=](const QByteArray &data) {
-        qDebug() << data;
+        QTextStream out(stdout);
+        out << data;
     });
 
     return app.exec();
