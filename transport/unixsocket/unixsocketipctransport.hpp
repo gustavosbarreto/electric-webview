@@ -31,7 +31,7 @@ public:
     virtual void close();
     virtual void write(const QByteArray &data);
 
-    static IpcClient *newClient(const QStringList &args);
+    static IpcClient *newClient(const QStringList &args, bool reverse = false);
 
 private:
     QLocalSocket *m_socket;

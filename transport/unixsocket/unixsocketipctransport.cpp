@@ -63,7 +63,7 @@ void UnixSocketIpcClient::initialize()
 
 void UnixSocketIpcClient::close()
 {
-    m_socket->close();
+    m_socket->disconnectFromServer();
 }
 
 void UnixSocketIpcClient::write(const QByteArray &data)
@@ -71,7 +71,7 @@ void UnixSocketIpcClient::write(const QByteArray &data)
     m_socket->write(data);
 }
 
-IpcClient *UnixSocketIpcClient::newClient(const QStringList &args)
+IpcClient *UnixSocketIpcClient::newClient(const QStringList &args, bool reverse)
 {
     QVariantMap options;
     options["name"] = args.value(1);
@@ -82,18 +82,22 @@ IpcClient *UnixSocketIpcClient::newClient(const QStringList &args)
     client->setSocket(socket);
     client->initialize();
 
-    connect(socket, &QLocalSocket::connected, [client, options]() {
-        qInfo().noquote() << QString("unixsocket: Connected to %1").arg(options["name"].toString());
+    connect(socket, &QLocalSocket::connected, [client, options, reverse]() {
+        if (reverse)
+            qInfo().noquote() << QString("unixsocket: Connected to %1").arg(options["name"].toString());
         emit client->connected();
     });
 
-    connect(socket, &QLocalSocket::disconnected, [options]() {
-        qInfo().noquote() << QString("unixsocket: Disconnected from %1").arg(options["name"].toString());
+    connect(socket, &QLocalSocket::disconnected, [client, options, reverse]() {
+        if (reverse)
+            qInfo().noquote() << QString("unixsocket: Disconnected from %1").arg(options["name"].toString());
+        emit client->disconnected();
     });
 
-    connect(socket, static_cast<void(QLocalSocket::*)(QLocalSocket::LocalSocketError)>(&QLocalSocket::error), [options](QLocalSocket::LocalSocketError e) {
+    connect(socket, static_cast<void(QLocalSocket::*)(QLocalSocket::LocalSocketError)>(&QLocalSocket::error), [options, reverse](QLocalSocket::LocalSocketError e) {
         Q_UNUSED(e);
-        qDebug().noquote() << QString("unixsocket: Failed to connect to %1").arg(options["name"].toString());
+        if (reverse)
+            qDebug().noquote() << QString("unixsocket: Failed to connect to %1").arg(options["name"].toString());
     });
 
     QTimer::singleShot(0, [socket, options]() {

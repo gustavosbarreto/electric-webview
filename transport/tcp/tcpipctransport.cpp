@@ -64,7 +64,7 @@ void TcpIpcClient::initialize()
 
 void TcpIpcClient::close()
 {
-    m_socket->close();
+    m_socket->disconnectFromHost();
 }
 
 void TcpIpcClient::write(const QByteArray &data)
@@ -72,7 +72,7 @@ void TcpIpcClient::write(const QByteArray &data)
     m_socket->write(data);
 }
 
-IpcClient *TcpIpcClient::newClient(const QStringList &args)
+IpcClient *TcpIpcClient::newClient(const QStringList &args, bool reverse)
 {
     QVariantMap options;
     options["host"] = args.value(1);
@@ -84,18 +84,22 @@ IpcClient *TcpIpcClient::newClient(const QStringList &args)
     client->setSocket(socket);
     client->initialize();
 
-    connect(socket, &QTcpSocket::connected, [client, options]() {
-        qInfo().noquote() << QString("tcp: Connected to %1:%2").arg(options["host"].toString()).arg(options["port"].toString());
+    connect(socket, &QTcpSocket::connected, [client, options, reverse]() {
+        if (reverse)
+            qInfo().noquote() << QString("tcp: Connected to %1:%2").arg(options["host"].toString()).arg(options["port"].toString());
         emit client->connected();
     });
 
-    connect(socket, &QTcpSocket::disconnected, [options]() {
-        qInfo().noquote() << QString("tcp: Disconnected from %1:%2").arg(options["host"].toString()).arg(options["port"].toString());
+    connect(socket, &QTcpSocket::disconnected, [client, options, reverse]() {
+        if (reverse)
+            qInfo().noquote() << QString("tcp: Disconnected from %1:%2").arg(options["host"].toString()).arg(options["port"].toString());
+        emit client->disconnected();
     });
 
-    connect(socket, static_cast<void(QAbstractSocket::*)(QAbstractSocket::SocketError)>(&QTcpSocket::error), [options](QAbstractSocket::SocketError e) {
+    connect(socket, static_cast<void(QAbstractSocket::*)(QAbstractSocket::SocketError)>(&QTcpSocket::error), [options, reverse](QAbstractSocket::SocketError e) {
         Q_UNUSED(e);
-        qDebug().noquote() << QString("tcp: Failed to connect to %1:%2").arg(options["host"].toString()).arg(options["port"].toString());
+        if (reverse)
+            qDebug().noquote() << QString("tcp: Failed to connect to %1:%2").arg(options["host"].toString()).arg(options["port"].toString());
     });
 
     QTimer::singleShot(0, [socket, options]() {

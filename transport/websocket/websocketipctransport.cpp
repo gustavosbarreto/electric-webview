@@ -72,7 +72,7 @@ void WebSocketIpcClient::write(const QByteArray &data)
     m_socket->sendTextMessage(data);
 }
 
-IpcClient *WebSocketIpcClient::newClient(const QStringList &args)
+IpcClient *WebSocketIpcClient::newClient(const QStringList &args, bool reverse)
 {
     QVariantMap options;
     options["host"] = args.value(1);
@@ -84,18 +84,22 @@ IpcClient *WebSocketIpcClient::newClient(const QStringList &args)
     client->setSocket(socket);
     client->initialize();
 
-    connect(socket, &QWebSocket::connected, [client, options]() {
-        qInfo().noquote() << QString("websocket: Connected to %1:%2").arg(options["host"].toString()).arg(options["port"].toString());
+    connect(socket, &QWebSocket::connected, [client, options, reverse]() {
+        if (reverse)
+            qInfo().noquote() << QString("websocket: Connected to %1:%2").arg(options["host"].toString()).arg(options["port"].toString());
         emit client->connected();
     });
 
-    connect(socket, &QWebSocket::disconnected, [options]() {
-        qInfo().noquote() << QString("websocket: Disconnected from %1:%2").arg(options["host"].toString()).arg(options["port"].toString());
+    connect(socket, &QWebSocket::disconnected, [client, options, reverse]() {
+        if (reverse)
+            qInfo().noquote() << QString("websocket: Disconnected from %1:%2").arg(options["host"].toString()).arg(options["port"].toString());
+        emit client->disconnected();
     });
 
-    connect(socket, static_cast<void(QWebSocket::*)(QAbstractSocket::SocketError)>(&QWebSocket::error), [options](QAbstractSocket::SocketError e) {
+    connect(socket, static_cast<void(QWebSocket::*)(QAbstractSocket::SocketError)>(&QWebSocket::error), [options, reverse](QAbstractSocket::SocketError e) {
         Q_UNUSED(e);
-        qDebug().noquote() << QString("websocket: Failed to connect to %1:%2").arg(options["host"].toString()).arg(options["port"].toString());
+        if (reverse)
+            qDebug().noquote() << QString("websocket: Failed to connect to %1:%2").arg(options["host"].toString()).arg(options["port"].toString());
     });
 
     QTimer::singleShot(0, [socket, options]() {

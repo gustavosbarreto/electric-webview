@@ -9,8 +9,9 @@ void IpcClient::initialize()
 {
 }
 
-IpcClient *IpcClient::newClient(const QStringList &args)
+IpcClient *IpcClient::newClient(const QStringList &args, bool reverse)
 {
     Q_UNUSED(args);
+    Q_UNUSED(reverse);
     return NULL;
 }
