@@ -1,2 +1,2 @@
 TEMPLATE = subdirs
-SUBDIRS += core ctl
+SUBDIRS += webview ctl
