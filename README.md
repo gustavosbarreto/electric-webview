@@ -36,10 +36,10 @@ the browser remotely. To enable reverse IPC pass `"--reverse"` in the cmdline.
 
 Before building Instant WebView you need GCC 6, Qt and QtWebEngine 5.6 installed on the system.
 
-```
-$ qmake PREFIX=/usr
-$ make
-$ make install
+```sh
+qmake PREFIX=/usr
+make
+make install
 ```
 
 # Running
@@ -49,9 +49,9 @@ by IPC mechanism, use the `--transport` option to that.
 
 Example:
 
-```
-$ instant-webview --transport unixsocket
-$ echo -e "open maximized\nload http://google.com" | nc -U /tmp/instant-webview
+```sh
+instant-webview --transport unixsocket:/tmp/instant-webview
+echo "open maximized" | instant-webview-ctl -t unixsocket:/tmp/instant-webview
 ```
 
 # Commands
@@ -62,20 +62,30 @@ as end of connection.
 
 If the command starts with `@` the command is marked as single-shot.
 
+Due to the simplicity of the protocol, it is possible to interact with the WebView
+using the command-line utility GNU Netcat. However, there is `instant-webview-ctl`
+utility that can be used to interact with the WebView, so you don't need extra
+tools to interact with the WebView.
+
+Simple example using the GNU Netcat utility to demonstrate how simple is the protocol:
+
+```sh
+echo "open maximized" | nc -U /tmp/instant-webview
+echo "load http://google.com" | nc -U /tmp/instant-webview
+```
+
+In the below example a maximized window is open and the http://google.com is loaded.
+
 ## Single-shot commands
 
 Single-shot commands might be used to wait until command response is received.
-It might be useful to get data from the Instant WebView using the netcat utility.
-
-Example:
+It might be useful to get data from the WebView using both `instant-webview-ctl`
+and GNU Netcat utility.
 
 ```sh
-URL=$(echo "@current_url" | nc -q -1 -U /tmp/instant-webview)
+URL=$(echo "@current_url" | instant-webview-ctl -t unixsocket:/tmp/instant-webview)
 echo "The current URL is $URL"
 ```
-
-In the below example the command ```@current_url``` is sent and the netcat waits
-forever for the response. After response is received, the connection is closed.
 
 ## Command response
 
@@ -151,45 +161,11 @@ name and returned data, separated by space.
   - This event is fired when a load of the page has finished.
 * `user_activity <IDLE_TIME>`
   - This event is fired when the user interacts with the input system through
-    keystrokes or mouse clicks. The `IDLE_TIME` is the time milliseconds since
+    keystrokes or mouse clicks. The `IDLE_TIME` is the milliseconds since the
     last user activity.
 
 ## Instant WebView
 
 * `idle_time`
-  - Returns the idle time from the last user input in milliseconds.
+  - Returns the idle time from the last user activity in milliseconds.
 
-# Examples
-
-**Basic Example**
-
-Open a maximized window and load google.com:
-
-```sh
-echo "open maximized" | nc -U /tmp/instant-webview
-echo "load http://google.com" | nc -U /tmp/instant-webview
-```
-
-**Screenshot Example**
-
-Open a maximized window, load google.com and wait until load is finished
-to take a screenshot:
-
-```sh
-echo "open maximized" | nc -U /tmp/instant-webview
-echo -e "@subscribe load_finished\nload http://google.com" | nc -q -1 -U /tmp/instant-webview
-echo -e "@screenshot" | nc -q -1 -U /tmp/instant-webview | base64 --decode > screenshot.jpg
-```
-
-**Browser History Example**
-
-Open a maximized window, subscribe to url_changed event, wait until it
-is fired then append the URL to /tmp/history.txt:
-
-```sh
-echo "open maximized" | nc -U /tmp/instant-webview
-while true; do
-  URL=$(echo -e "@subscribe url_changed" | nc -q -1 -U /tmp/instant-webview)
-  echo "$URL" >> /tmp/history.txt
-done
-```
