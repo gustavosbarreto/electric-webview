@@ -51,5 +51,8 @@ alias @js="__instant_webview_send js true $@"
 alias subscribe="__instant_webview_send subscribe false $@"
 alias @subscribe="__instant_webview_send subscribe true $@"
 
-alias idle_timeout="__instant_webview_send idle_timeout false $@"
-alias @idle_timeout="__instant_webview_send idle_timeout true $@"
+alias idle_time="__instant_webview_send idle_time false"
+alias @idle_time="__instant_webview_send idle_time true"
+
+alias block_activity="__instant_webview_send block_activity false $@"
+alias @block_activity="__instant_webview_send block_activity true $@"
