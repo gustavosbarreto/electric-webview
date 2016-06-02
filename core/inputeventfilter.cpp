@@ -15,10 +15,26 @@ int InputEventFilter::idle() const
 
 bool InputEventFilter::eventFilter(QObject *obj, QEvent *event)
 {
-    if (event->type() == QEvent::KeyPress || event->type() == QEvent::MouseMove) {
+    if (event->type() == QEvent::KeyPress
+        || event->type() == QEvent::MouseMove
+        || event->type() == QEvent::MouseButtonPress
+        || event->type() == QEvent::MouseButtonDblClick) {
+        if (m_block)
+            return true;
+
         emit activity(m_idleTime.elapsed());
         m_idleTime.restart();
     }
 
     return QObject::eventFilter(obj, event);
+}
+
+bool InputEventFilter::block() const
+{
+    return m_block;
+}
+
+void InputEventFilter::setBlock(bool block)
+{
+    m_block = block;
 }

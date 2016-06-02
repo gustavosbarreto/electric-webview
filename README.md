@@ -196,3 +196,6 @@ name and returned data, separated by space.
 * `idle_time`
   - Returns the idle time from the last user activity in milliseconds.
 
+* `block_activity <true|false>`
+  - If `true` is given, prevents the user activity with the page until `false` is given.
+

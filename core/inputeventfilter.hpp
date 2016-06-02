@@ -13,6 +13,9 @@ public:
 
     int idle() const;
 
+    bool block() const;
+    void setBlock(bool block);
+
 signals:
     void activity(int idleTime);
 
@@ -21,6 +24,7 @@ private:
 
 private:
     QTime m_idleTime;
+    bool m_block;
 };
 
 #endif // INPUTEVENTFILTER_HPP
