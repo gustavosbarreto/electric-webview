@@ -69,9 +69,8 @@ void CommandHandler::processCommand(const Command &command) const
                 << "user_activity";
 
         if (events.contains(eventName)) {
-            Event event;
+            Event event(command);
             event.setName(eventName);
-            event.setSubscriptionCommand(command);
 
             InstantWebView::instance()->eventManager()->subscribe(event);
         }
