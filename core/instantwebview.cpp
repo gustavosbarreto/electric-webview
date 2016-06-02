@@ -42,9 +42,11 @@ void InstantWebView::runScript(const QString &transport, const QString &fileName
     QProcess *process = new QProcess();
 
     QObject::connect(process, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), [=](int exitCode, QProcess::ExitStatus exitStatus) {
-       file->remove();
-       file->deleteLater();
-       process->deleteLater();
+        Q_UNUSED(exitCode);
+        Q_UNUSED(exitStatus);
+        file->remove();
+        file->deleteLater();
+        process->deleteLater();
     });
 
     process->setProcessEnvironment(env);
