@@ -2,18 +2,13 @@
 
 [![Build Status](https://travis-ci.org/gustavosbarreto/instant-webview.svg?branch=master)](https://travis-ci.org/gustavosbarreto/instant-webview)
 
-Instant WebView is a web browser which has no UI controls. You can interact with
-them through inter-process communication (IPC).
+Instant WebView is a scriptable WebView for developers.
 
-Currently, we support the following IPC transport layers:
-
-* TCP
-* Unix Socket
-* WebSocket
-
-You can implement another IPC transport layer inheriting the
-`IpcTransportLayer` abstract class. See the existing IPC transport
-implementations to get some clue.
+The WebView uses the QtWebEngine (which is based on Chromium) to render the HTML
+content. There is also a simple protocol to get data, send commands and
+listen for events: through Unix Socket, TCP or WebSocket. The window of WebView
+does not have any UI component what you see in a standard web browser like an
+address bar, status bar, navigation buttons, etc.
 
 # Use Cases
 
@@ -26,15 +21,9 @@ implementations to get some clue.
 * Kiosk Web Browser
   - The users can only interact with a single web application.
 
-# Reverse IPC
-
-With reverse IPC, the Instant WebView accept commands from remote IPC server
-instead of accepting commands from IPC clients. This is useful for controlling
-the browser remotely. To enable reverse IPC pass `"--reverse"` in the cmdline.
-
 # Building
 
-Before building Instant WebView you need GCC 6, Qt and QtWebEngine 5.6 installed on the system.
+Before building Instant WebView you need to install GCC 6, Qt and QtWebEngine 5.6 on the system.
 
 ```sh
 qmake PREFIX=/usr
@@ -42,21 +31,59 @@ make
 make install
 ```
 
-# Running
+# Usage
 
-To run Instant WebView you need to choose which IPC transport layer should be used
-by IPC mechanism, use the `--transport` option to that.
+### instant-webview
 
-Example:
+The WebView itself.
+
+```
+Usage: instant-webview [options]
+Instant WebView is a scriptable WebView for developers.
+
+Options:
+  -h, --help                                  Displays this help.
+  -v, --version                               Displays version information.
+  -t, --transport <tcp|unixsocket|websocket>  IPC Transport Layer to use.
+  -r, --reverse <ID>                          Enable reverse mode. The ID is
+                                              used to identify your session in
+                                              the server.
+  -s, --script <path>                         Script to run.
+```
+
+**Example:**
 
 ```sh
-instant-webview --transport unixsocket:/tmp/instant-webview
-echo "open maximized" | instant-webview-ctl -t unixsocket:/tmp/instant-webview
+instant-webview -t unixsocket:/tmp/instant-webview
+```
+
+### instant-webview-ctl
+
+A utility to interact with the WebView.
+
+```
+Usage: instant-webview-ctl [options] command
+Instant WebView is a scriptable WebView for developers.
+
+Options:
+  -h, --help                                  Displays this help.
+  -v, --version                               Displays version information.
+  -t, --transport <tcp|unixsocket|websocket>  IPC Transport Layer to use.
+
+Arguments:
+  command                                     Command to execute. Pass "-" to
+                                              read from stdin.
+```
+
+**Example:**
+
+```sh
+echo "open maximized" | instant-webview-ctl -t unixsocket:/tmp/instant-webview -
 ```
 
 # Commands
 
-Instant WebView will read commands via TCP, Unix Socket or WebSocket. Each command starts
+Instant WebView reads commands from TCP, Unix Socket or WebSocket. Each command starts
 with the name of a command and is terminated by a newline. Empty line are interpreted
 as end of connection.
 
