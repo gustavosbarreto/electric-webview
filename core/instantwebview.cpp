@@ -4,6 +4,7 @@
 #include <QCoreApplication>
 #include <QProcess>
 #include <QProcessEnvironment>
+#include <QTemporaryFile>
 
 #include "commandhandler.hpp"
 #include "eventmanager.hpp"
@@ -22,12 +23,32 @@ void InstantWebView::initialize()
     qApp->installEventFilter(m_inputEventFilter);
 }
 
-void InstantWebView::runScript(const QString &fileName)
+void InstantWebView::runScript(const QString &transport, const QString &fileName)
 {
     QProcessEnvironment env(QProcessEnvironment::systemEnvironment());
+    env.insert("INSTANT_WEBVIEW_TRANSPORT", transport);
+
+    QFile aliasFile(":/ctl/shellscript.sh");
+    aliasFile.open(QFile::ReadOnly);
+
+    QFile scriptFile(fileName);
+    scriptFile.open(QFile::ReadOnly);
+
+    QTemporaryFile *file = new QTemporaryFile();
+    file->open();
+    file->write(aliasFile.readAll() + "\n" + scriptFile.readAll());
+    file->close();
 
     QProcess *process = new QProcess();
-    process->start("sh", QStringList() << fileName);
+
+    QObject::connect(process, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), [=](int exitCode, QProcess::ExitStatus exitStatus) {
+       file->remove();
+       file->deleteLater();
+       process->deleteLater();
+    });
+
+    process->setProcessEnvironment(env);
+    process->start("sh", QStringList() << file->fileName());
 }
 
 InstantWebView::InstantWebView()

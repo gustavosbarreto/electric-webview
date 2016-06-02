@@ -12,6 +12,8 @@ INCLUDEPATH += \
 SOURCES += \
     main.cpp
 
+RESOURCES += resources.qrc
+
 target.path = $$PREFIX/bin
 
 INSTALLS += target

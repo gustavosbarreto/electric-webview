@@ -16,7 +16,7 @@ public:
 
     void initialize();
 
-    void runScript(const QString &fileName);
+    void runScript(const QString &transport, const QString &fileName);
 
     QWebEngineView *webView() const;
     EventManager *eventManager() const;
