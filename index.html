@@ -24,20 +24,13 @@
 
 <p><a href="https://travis-ci.org/gustavosbarreto/instant-webview"><img src="https://travis-ci.org/gustavosbarreto/instant-webview.svg?branch=master" alt="Build Status"></a></p>
 
-<p>Instant WebView is a web browser which has no UI controls. You can interact with
-them through inter-process communication (IPC).</p>
+<p>Instant WebView is a scriptable WebView for developers.</p>
 
-<p>Currently, we support the following IPC transport layers:</p>
-
-<ul>
-<li>TCP</li>
-<li>Unix Socket</li>
-<li>WebSocket</li>
-</ul>
-
-<p>You can implement another IPC transport layer inheriting the
-<code>IpcTransportLayer</code> abstract class. See the existing IPC transport
-implementations to get some clue.</p>
+<p>The WebView uses the QtWebEngine (which is based on Chromium) to render the HTML
+content. There is also a simple protocol to get data, send commands and
+listen for events: through Unix Socket, TCP or WebSocket. The window of WebView
+does not have any UI component what you see in a standard web browser like an
+address bar, status bar, navigation buttons, etc.</p>
 
 <h1>
 <a id="use-cases" class="anchor" href="#use-cases" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Use Cases</h1>
@@ -70,56 +63,91 @@ implementations to get some clue.</p>
 </ul>
 
 <h1>
-<a id="reverse-ipc" class="anchor" href="#reverse-ipc" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Reverse IPC</h1>
-
-<p>With reverse IPC, the Instant WebView accept commands from remote IPC server
-instead of accepting commands from IPC clients. This is useful for controlling
-the browser remotely. To enable reverse IPC pass <code>"--reverse"</code> in the cmdline.</p>
-
-<h1>
 <a id="building" class="anchor" href="#building" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Building</h1>
 
-<p>Before building Instant WebView you need GCC 6, Qt and QtWebEngine 5.6 installed on the system.</p>
+<p>Before building Instant WebView you need to install GCC 6, Qt and QtWebEngine 5.6 on the system.</p>
 
-<pre><code>$ qmake PREFIX=/usr
-$ make
-$ make install
-</code></pre>
+<div class="highlight highlight-source-shell"><pre>qmake PREFIX=/usr
+make
+make install</pre></div>
 
 <h1>
-<a id="running" class="anchor" href="#running" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Running</h1>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage</h1>
 
-<p>To run Instant WebView you need to choose which IPC transport layer should be used
-by IPC mechanism, use the <code>--transport</code> option to that.</p>
+<h3>
+<a id="instant-webview" class="anchor" href="#instant-webview" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>instant-webview</h3>
 
-<p>Example:</p>
+<p>The WebView itself.</p>
 
-<pre><code>$ instant-webview --transport unixsocket
-$ echo -e "open maximized\nload http://google.com" | nc -U /tmp/instant-webview
+<pre><code>Usage: instant-webview [options]
+Instant WebView is a scriptable WebView for developers.
+
+Options:
+  -h, --help                                  Displays this help.
+  -v, --version                               Displays version information.
+  -t, --transport &lt;tcp|unixsocket|websocket&gt;  IPC Transport Layer to use.
+  -r, --reverse &lt;ID&gt;                          Enable reverse mode. The ID is
+                                              used to identify your session in
+                                              the server.
+  -s, --script &lt;path&gt;                         Script to run.
 </code></pre>
+
+<p><strong>Example:</strong></p>
+
+<div class="highlight highlight-source-shell"><pre>instant-webview -t unixsocket:/tmp/instant-webview</pre></div>
+
+<h3>
+<a id="instant-webview-ctl" class="anchor" href="#instant-webview-ctl" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>instant-webview-ctl</h3>
+
+<p>A utility to interact with the WebView.</p>
+
+<pre><code>Usage: instant-webview-ctl [options] command
+Instant WebView is a scriptable WebView for developers.
+
+Options:
+  -h, --help                                  Displays this help.
+  -v, --version                               Displays version information.
+  -t, --transport &lt;tcp|unixsocket|websocket&gt;  IPC Transport Layer to use.
+
+Arguments:
+  command                                     Command to execute. Pass "-" to
+                                              read from stdin.
+</code></pre>
+
+<p><strong>Example:</strong></p>
+
+<div class="highlight highlight-source-shell"><pre><span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>open maximized<span class="pl-pds">"</span></span> <span class="pl-k">|</span> instant-webview-ctl -t unixsocket:/tmp/instant-webview -</pre></div>
 
 <h1>
 <a id="commands" class="anchor" href="#commands" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Commands</h1>
 
-<p>Instant WebView will read commands via TCP, Unix Socket or WebSocket. Each command starts
+<p>Instant WebView reads commands from TCP, Unix Socket or WebSocket. Each command starts
 with the name of a command and is terminated by a newline. Empty line are interpreted
 as end of connection.</p>
 
 <p>If the command starts with <code>@</code> the command is marked as single-shot.</p>
 
+<p>Due to the simplicity of the protocol, it is possible to interact with the WebView
+using the command-line utility GNU Netcat. However, there is <code>instant-webview-ctl</code>
+utility that can be used to interact with the WebView, so you don't need extra
+tools to interact with the WebView.</p>
+
+<p>Simple example using the GNU Netcat utility to demonstrate how simple is the protocol:</p>
+
+<div class="highlight highlight-source-shell"><pre><span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>open maximized<span class="pl-pds">"</span></span> <span class="pl-k">|</span> nc -U /tmp/instant-webview
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>load http://google.com<span class="pl-pds">"</span></span> <span class="pl-k">|</span> nc -U /tmp/instant-webview</pre></div>
+
+<p>In the below example a maximized window is open and the <a href="http://google.com">http://google.com</a> is loaded.</p>
+
 <h2>
 <a id="single-shot-commands" class="anchor" href="#single-shot-commands" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Single-shot commands</h2>
 
 <p>Single-shot commands might be used to wait until command response is received.
-It might be useful to get data from the Instant WebView using the netcat utility.</p>
+It might be useful to get data from the WebView using both <code>instant-webview-ctl</code>
+and GNU Netcat utility.</p>
 
-<p>Example:</p>
-
-<div class="highlight highlight-source-shell"><pre>URL=<span class="pl-s"><span class="pl-pds">$(</span><span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>@current_url<span class="pl-pds">"</span></span> <span class="pl-k">|</span> nc -q -1 -U /tmp/instant-webview<span class="pl-pds">)</span></span>
+<div class="highlight highlight-source-shell"><pre>URL=<span class="pl-s"><span class="pl-pds">$(</span><span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>@current_url<span class="pl-pds">"</span></span> <span class="pl-k">|</span> instant-webview-ctl -t unixsocket:/tmp/instant-webview<span class="pl-pds">)</span></span>
 <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>The current URL is <span class="pl-smi">$URL</span><span class="pl-pds">"</span></span></pre></div>
-
-<p>In the below example the command <code>@current_url</code> is sent and the netcat waits
-forever for the response. After response is received, the connection is closed.</p>
 
 <h2>
 <a id="command-response" class="anchor" href="#command-response" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Command response</h2>
@@ -290,37 +318,29 @@ is executed as JavaScript code.</li>
 <li>This event is fired when a load of the page has finished.</li>
 </ul>
 </li>
+<li>
+<code>user_activity &lt;IDLE_TIME&gt;</code>
+
+<ul>
+<li>This event is fired when the user interacts with the input system through
+keystrokes or mouse clicks. The <code>IDLE_TIME</code> is the milliseconds since the
+last user activity.</li>
+</ul>
+</li>
 </ul>
 
-<h1>
-<a id="examples" class="anchor" href="#examples" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Examples</h1>
+<h2>
+<a id="instant-webview-1" class="anchor" href="#instant-webview-1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Instant WebView</h2>
 
-<p><strong>Basic Example</strong></p>
+<ul>
+<li>
+<code>idle_time</code>
 
-<p>Open a maximized window and load google.com:</p>
-
-<div class="highlight highlight-source-shell"><pre><span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>open maximized<span class="pl-pds">"</span></span> <span class="pl-k">|</span> nc -U /tmp/instant-webview
-<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>load http://google.com<span class="pl-pds">"</span></span> <span class="pl-k">|</span> nc -U /tmp/instant-webview</pre></div>
-
-<p><strong>Screenshot Example</strong></p>
-
-<p>Open a maximized window, load google.com and wait until load is finished
-to take a screenshot:</p>
-
-<div class="highlight highlight-source-shell"><pre><span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>open maximized<span class="pl-pds">"</span></span> <span class="pl-k">|</span> nc -U /tmp/instant-webview
-<span class="pl-c1">echo</span> -e <span class="pl-s"><span class="pl-pds">"</span>@subscribe load_finished\nload http://google.com<span class="pl-pds">"</span></span> <span class="pl-k">|</span> nc -q -1 -U /tmp/instant-webview
-<span class="pl-c1">echo</span> -e <span class="pl-s"><span class="pl-pds">"</span>@screenshot<span class="pl-pds">"</span></span> <span class="pl-k">|</span> nc -q -1 -U /tmp/instant-webview <span class="pl-k">|</span> base64 --decode <span class="pl-k">&gt;</span> screenshot.jpg</pre></div>
-
-<p><strong>Browser History Example</strong></p>
-
-<p>Open a maximized window, subscribe to url_changed event, wait until it
-is fired then append the URL to /tmp/history.txt:</p>
-
-<div class="highlight highlight-source-shell"><pre><span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>open maximized<span class="pl-pds">"</span></span> <span class="pl-k">|</span> nc -U /tmp/instant-webview
-<span class="pl-k">while</span> <span class="pl-c1">true</span><span class="pl-k">;</span> <span class="pl-k">do</span>
-  URL=<span class="pl-s"><span class="pl-pds">$(</span><span class="pl-c1">echo</span> -e <span class="pl-s"><span class="pl-pds">"</span>@subscribe url_changed<span class="pl-pds">"</span></span> <span class="pl-k">|</span> nc -q -1 -U /tmp/instant-webview<span class="pl-pds">)</span></span>
-  <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$URL</span><span class="pl-pds">"</span></span> <span class="pl-k">&gt;&gt;</span> /tmp/history.txt
-<span class="pl-k">done</span></pre></div>
+<ul>
+<li>Returns the idle time from the last user activity in milliseconds.</li>
+</ul>
+</li>
+</ul>
 
       <footer class="site-footer">
         <span class="site-footer-owner"><a href="https://github.com/gustavosbarreto/instant-webview">Instant-webview</a> is maintained by <a href="https://github.com/gustavosbarreto">gustavosbarreto</a>.</span>
