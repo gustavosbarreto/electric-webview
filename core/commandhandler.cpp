@@ -149,7 +149,7 @@ void CommandHandler::processJavaScriptCommand(const Command &command) const
     // Process JavaScript response from Web View and tells the even loop to exit
     auto processJavaScriptResponse = [&command, &loop](const QVariant &out) mutable {
         if (!command.client().isNull()) {
-            command.sendResponse(out.toByteArray());
+            command.sendResponse(QUrl::toPercentEncoding(out.toString()));
 
             if (command.isSingleShot())
                 command.client()->close();
