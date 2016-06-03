@@ -103,20 +103,7 @@ void IpcServer::parseData(QPointer<IpcClient> client, const QByteArray &data)
         if (line.isEmpty())
             continue;
 
-        QStringList args;
-        QStringList tokens = line.split(QRegExp("\""));
-
-        bool insideQuote = false;
-
-        foreach (const QString &str, tokens) {
-            if (insideQuote) {
-                args.append(str);
-            } else {
-                args.append(str.split(QRegExp("\\s+"), QString::SkipEmptyParts));
-            }
-
-            insideQuote = !insideQuote;
-        }
+        QStringList args = line.split(' ');
 
         Command cmd;
         cmd.setName(args.first());

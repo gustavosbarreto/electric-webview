@@ -45,7 +45,7 @@ void CommandHandler::processCommand(const Command &command) const
         command.sendResponse(webView->url().toString().toLocal8Bit());
     } else if (command.name() == "set_html") {
         QString type = command.arguments().value(0);
-        QString value = command.arguments().value(1);
+        QString value = command.arguments().mid(1, -1).join(' ');
 
         if (type == "string") {
             webView->page()->setHtml(value.toLocal8Bit());
@@ -112,7 +112,7 @@ void CommandHandler::processScreenshotCommand(const Command &command) const
 void CommandHandler::processJavaScriptCommand(const Command &command) const
 {
     QString type = command.arguments().value(0);
-    QString value = command.arguments().value(1);
+    QString value = command.arguments().mid(1, -1).join(' ');
 
     QEventLoop loop;
 
