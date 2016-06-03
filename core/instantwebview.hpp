@@ -19,6 +19,8 @@ public:
     void runScript(const QString &transport, const QString &fileName);
 
     QWebEngineView *webView() const;
+    void setWebView(QWebEngineView *webView);
+
     EventManager *eventManager() const;
     CommandHandler *commandHandler() const;
     InputEventFilter *inputEventFilter() const;

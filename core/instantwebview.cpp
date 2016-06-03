@@ -1,6 +1,5 @@
 #include "instantwebview.hpp"
 
-#include <QWebEngineView>
 #include <QCoreApplication>
 #include <QProcess>
 #include <QProcessEnvironment>
@@ -55,7 +54,6 @@ void InstantWebView::runScript(const QString &transport, const QString &fileName
 
 InstantWebView::InstantWebView()
 {
-    m_webView = new QWebEngineView();
     m_eventManager = new EventManager;
     m_commandHandler = new CommandHandler();
     m_inputEventFilter = new InputEventFilter;
@@ -80,4 +78,9 @@ EventManager *InstantWebView::eventManager() const
 QWebEngineView *InstantWebView::webView() const
 {
     return m_webView;
+}
+
+void InstantWebView::setWebView(QWebEngineView *webView)
+{
+    m_webView = webView;
 }

@@ -62,3 +62,8 @@ void EventManager::subscribe(const Event &event)
         m_subscribers[event.name()].removeOne(event);
     });
 }
+
+const QList<Event> &EventManager::subscribers(const QString &eventName)
+{
+    return m_subscribers[eventName];
+}

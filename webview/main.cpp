@@ -2,12 +2,12 @@
 #include <QCommandLineParser>
 #include <QCommandLineOption>
 #include <QWebEngineView>
-#include <QtWebEngine/QtWebEngine>
 #include <QDebug>
 
 #include "ipcserver.hpp"
 #include "commandhandler.hpp"
 #include "instantwebview.hpp"
+#include "webpage.hpp"
 
 int main(int argc, char *argv[])
 {
@@ -36,6 +36,11 @@ int main(int argc, char *argv[])
     ipcServer->setReverse(cmdParser.isSet("reverse"));
     ipcServer->setReverseId(cmdParser.value("reverse"));
     ipcServer->initialize();
+
+    QWebEngineView *webView = new QWebEngineView;
+    webView->setPage(new WebPage);
+
+    InstantWebView::instance()->setWebView(webView);
 
     InstantWebView::instance()->initialize();
 

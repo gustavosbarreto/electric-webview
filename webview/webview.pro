@@ -10,10 +10,14 @@ INCLUDEPATH += \
     $$PWD/../core
 
 SOURCES += \
-    main.cpp
+    main.cpp \
+    webpage.cpp
 
 RESOURCES += resources.qrc
 
 target.path = $$PREFIX/bin
 
 INSTALLS += target
+
+HEADERS += \
+    webpage.hpp

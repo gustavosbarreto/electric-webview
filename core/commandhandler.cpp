@@ -66,7 +66,8 @@ void CommandHandler::processCommand(const Command &command) const
                 << "url_changed"
                 << "load_started"
                 << "load_finished"
-                << "user_activity";
+                << "user_activity"
+                << "console_message";
 
         if (events.contains(eventName)) {
             Event event(command);
