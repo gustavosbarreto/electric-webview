@@ -55,6 +55,36 @@ void CommandHandler::processCommand(const Command &command) const
 
             webView->page()->setHtml(file.readAll());
         }
+    } else if (command.name() == "get_html") {
+        QString format = command.arguments().value(0);
+
+        QEventLoop loop;
+
+        if (format == "html") {
+            webView->page()->toHtml([&command, &loop](const QString &html) {
+                if (!command.client().isNull()) {
+                    command.sendResponse(QUrl::toPercentEncoding(html));
+
+                    if (command.isSingleShot())
+                        command.client()->close();
+                }
+                loop.quit();
+            });
+        } else if (format == "text") {
+            webView->page()->toPlainText([&command, &loop](const QString &text) {
+                if (!command.client().isNull()) {
+                    command.sendResponse(QUrl::toPercentEncoding(text));
+
+                    if (command.isSingleShot())
+                        command.client()->close();
+                }
+                loop.quit();
+            });
+        } else {
+            return;
+        }
+
+        loop.exec();
     } else if (command.name() == "current_title") {
         command.sendResponse(webView->title().toLocal8Bit());
     } else if (command.name() == "screenshot") {

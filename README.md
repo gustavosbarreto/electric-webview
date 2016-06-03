@@ -166,6 +166,9 @@ name and returned data, separated by space.
     is interpreted as a path to a file to load, otherwise `string` is given,
     the `VALUE` is used to set the content of the web page.
 
+* `get_html <text|html>`
+  - Retrieve the page's content formated as `html` or `text`.
+
 * `js <string|file> <VALUE>`
   - Run JavaScript code. If `file` is given, the `VALUE` is interpreted as
     a path to a file to load, otherwise `string` is given, the value `VALUE`

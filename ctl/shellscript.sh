@@ -27,6 +27,14 @@ function __instant_webview_send() {
   fi
 }
 
+function __instant_webview_decode_response() {
+    echo $@ | perl -ne "use URI::Escape; print(uri_unescape(\$_));"
+}
+
+function __instant_webview_get_html {
+    __instant_webview_decode_response $(__instant_webview_send get_html "$@")
+}
+
 alias load="__instant_webview_send load false $@"
 alias stop="__instant_webview_send stop false"
 alias reload="__instant_webview_send reload false"
@@ -56,3 +64,6 @@ alias @idle_time="__instant_webview_send idle_time true"
 
 alias block_activity="__instant_webview_send block_activity false $@"
 alias @block_activity="__instant_webview_send block_activity true $@"
+
+alias get_html="__instant_webview_get_html false $@"
+alias @get_html="__instant_webview_get_html true $@"
