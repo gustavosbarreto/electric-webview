@@ -109,7 +109,7 @@ void CommandHandler::processCommand(const Command &command) const
         processJavaScriptCommand(command);
     } else if (command.name() == "idle_time") {
         command.sendResponse(QString("%1").arg(InstantWebView::instance()->inputEventFilter()->idle()).toLocal8Bit());
-    } else if (command.name() == "block_activity") {
+    } else if (command.name() == "block_user_activity") {
         bool block = QVariant(command.arguments().value(0)).toBool();
         InstantWebView::instance()->inputEventFilter()->setBlock(block);
     }
