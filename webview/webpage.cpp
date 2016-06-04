@@ -13,19 +13,17 @@ void WebPage::javaScriptConsoleMessage(QWebEnginePage::JavaScriptConsoleMessageL
     Q_UNUSED(lineNumber);
     Q_UNUSED(sourceID);
 
-    const QList<Event> &subscribers = InstantWebView::instance()->eventManager()->subscribers("console_message");
+    QString eventName;
+
+    if (level == QWebEnginePage::InfoMessageLevel)
+        eventName = "info_message_raised";
+    else if (level == QWebEnginePage::WarningMessageLevel)
+        eventName = "warning_message_raised";
+    else if (level == QWebEnginePage::ErrorMessageLevel)
+        eventName = "error_message_raised";
+
+    const QList<Event> &subscribers = InstantWebView::instance()->eventManager()->subscribers(eventName);
     foreach (const Event &event, subscribers) {
-        QStringList response;
-
-        if (level == QWebEnginePage::InfoMessageLevel)
-            response.append("info");
-        else if (level == QWebEnginePage::WarningMessageLevel)
-            response.append("warning");
-        else if (level == QWebEnginePage::ErrorMessageLevel)
-            response.append("error");
-
-        response.append("\"" + QString(message).replace("\"", "\\\"") + "\"");
-
-        event.sendResponse(response.join(' ').toLocal8Bit());
+        event.sendResponse(message.toLocal8Bit());
     }
 }

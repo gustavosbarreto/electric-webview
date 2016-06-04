@@ -189,9 +189,15 @@ name and returned data, separated by space.
   - This event is fired when a page starts loading content.
 * `load_finished`
   - This event is fired when a load of the page has finished.
-* `console_message <LEVEL> <MESSAGE>`
-  - This event is fired when a JavaScript program tries to print the `MESSAGE`
-    to the console. The `LEVEL` indicates the severity of the message.
+* `info_message_raised <MESSAGE>`
+  - This event is fired when a JavaScript program tries to print a info
+    `MESSAGE` to the console.
+* `warning_message_raised <MESSAGE>`
+  - This event is fired when a JavaScript program tries to print a warning
+    `MESSAGE` to the console.
+* `error_message_raised <MESSAGE>`
+  - This event is fired when a JavaScript program tries to print a error
+    `MESSAGE` to the console.
 * `user_activity <IDLE_TIME>`
   - This event is fired when the user interacts with the input system through
     keystrokes or mouse clicks. The `IDLE_TIME` is the milliseconds since the
