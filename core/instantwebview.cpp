@@ -4,6 +4,7 @@
 #include <QProcess>
 #include <QProcessEnvironment>
 #include <QTemporaryFile>
+#include <QTextStream>
 
 #include "commandhandler.hpp"
 #include "eventmanager.hpp"
@@ -46,6 +47,14 @@ void InstantWebView::runScript(const QString &transport, const QString &fileName
         file->remove();
         file->deleteLater();
         process->deleteLater();
+    });
+
+    QObject::connect(process, &QProcess::readyReadStandardOutput, [=]() {
+       QTextStream(stdout) << process->readAllStandardOutput();
+    });
+
+    QObject::connect(process, &QProcess::readyReadStandardError, [=]() {
+       QTextStream(stderr) << process->readAllStandardError();
     });
 
     process->setProcessEnvironment(env);
