@@ -169,7 +169,7 @@ name and returned data, separated by space.
 * `get_html <text|html>`
   - Retrieve the page's content formated as `html` or `text`.
 
-* `js <string|file> <VALUE>`
+* `exec_js <string|file> <VALUE>`
   - Run JavaScript code. If `file` is given, the `VALUE` is interpreted as
     a path to a file to load, otherwise `string` is given, the value `VALUE`
     is executed as JavaScript code.

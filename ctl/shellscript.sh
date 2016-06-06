@@ -53,8 +53,8 @@ alias @screenshot="__instant_webview_send screenshot true"
 
 alias set_html="__instant_webview_send set_html false $@"
 alias @set_html"=__instant_webview_send set_html true $@"
-alias js="__instant_webview_send js false $@"
-alias @js="__instant_webview_send js true $@"
+alias exec_js="__instant_webview_send exec_js false $@"
+alias @exec_js="__instant_webview_send exec_js true $@"
 
 alias subscribe="__instant_webview_send subscribe false $@"
 alias @subscribe="__instant_webview_send subscribe true $@"

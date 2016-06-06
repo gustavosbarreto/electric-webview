@@ -107,7 +107,7 @@ void CommandHandler::processCommand(const Command &command) const
 
             InstantWebView::instance()->eventManager()->subscribe(event);
         }
-    } else if (command.name() == "js") {
+    } else if (command.name() == "exec_js") {
         processJavaScriptCommand(command);
     } else if (command.name() == "idle_time") {
         command.sendResponse(QString("%1").arg(InstantWebView::instance()->inputEventFilter()->idle()).toLocal8Bit());
