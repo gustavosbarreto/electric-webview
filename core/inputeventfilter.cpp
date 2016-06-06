@@ -4,6 +4,7 @@
 
 InputEventFilter::InputEventFilter(QObject *parent)
     : QObject(parent)
+    , m_block(false)
 {
     m_idleTime.start();
 }
