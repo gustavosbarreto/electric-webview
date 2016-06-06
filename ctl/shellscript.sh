@@ -67,3 +67,6 @@ alias @block_activity="__instant_webview_send block_activity true $@"
 
 alias get_html="__instant_webview_get_html false $@"
 alias @get_html="__instant_webview_get_html true $@"
+
+alias exec_cmd="__instant_webview_send exec_cmd false $@"
+alias @exec_cmd="__instant_webview_send exec_cmd true $@"

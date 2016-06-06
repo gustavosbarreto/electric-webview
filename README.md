@@ -211,3 +211,8 @@ name and returned data, separated by space.
 * `block_user_activity <true|false>`
   - If `true` is given, prevents the user activity with the page until `false` is given.
 
+* `exec_cmd <sync|async> <COMMAND> [ARGUMENTS]`
+  - Run a `COMMAND` on the system with the given `ARGUMENTS`. If `async` is given,
+    the command will be started detached and the output will be ignored,
+    otherwise `sync` is given, the execution is blocked until the command has
+    finished and the output will be send in the response message.

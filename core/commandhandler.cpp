@@ -4,6 +4,7 @@
 #include <QFile>
 #include <QEventLoop>
 #include <QBuffer>
+#include <QProcess>
 
 #include "ipcclient.hpp"
 #include "eventmanager.hpp"
@@ -114,6 +115,17 @@ void CommandHandler::processCommand(const Command &command) const
     } else if (command.name() == "block_user_activity") {
         bool block = QVariant(command.arguments().value(0)).toBool();
         InstantWebView::instance()->inputEventFilter()->setBlock(block);
+    } else if (command.name() == "exec_cmd") {
+        bool sync = command.arguments().value(0) == "sync";
+
+        if (sync) {
+            QProcess *process = new QProcess;
+            process->start(command.arguments().mid(1, -1).join(' '));
+            process->waitForFinished(-1);
+            command.sendResponse(QUrl::toPercentEncoding(process->readAllStandardOutput()));
+        } else {
+            QProcess::startDetached(command.arguments().mid(1, -1).join(' '));
+        }
     }
 }
 
