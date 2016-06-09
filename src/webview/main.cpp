@@ -4,10 +4,15 @@
 #include <QWebEngineView>
 #include <QDebug>
 
-#include "ipcserver.hpp"
-#include "commandhandler.hpp"
-#include "instantwebview.hpp"
 #include "webpage.hpp"
+
+#include <ipc/ipcserver.hpp>
+#include <core/commandhandler.hpp>
+#include <core/instantwebview.hpp>
+
+#include <transport/unixsocket/unixsocketipctransport.hpp>
+#include <transport/tcp/tcpipctransport.hpp>
+#include <transport/websocket/websocketipctransport.hpp>
 
 int main(int argc, char *argv[])
 {

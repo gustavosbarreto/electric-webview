@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QPointer>
 
-#include "ipcclient.hpp"
+#include <ipc/ipcclient.hpp>
 
 class Command
 {

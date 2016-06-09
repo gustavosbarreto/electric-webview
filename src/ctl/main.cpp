@@ -8,9 +8,9 @@
 
 #include <unistd.h>
 
-#include "unixsocketipctransport.hpp"
-#include "tcpipctransport.hpp"
-#include "websocketipctransport.hpp"
+#include <transport/unixsocket/unixsocketipctransport.hpp>
+#include <transport/tcp/tcpipctransport.hpp>
+#include <transport/websocket/websocketipctransport.hpp>
 
 int main(int argc, char *argv[])
 {

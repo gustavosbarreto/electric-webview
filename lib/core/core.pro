@@ -1,12 +1,10 @@
-INCLUDEPATH += \
-    $$PWD/../ipc \
-    $$PWD/../transport \
-    $$PWD/../transport/tcp \
-    $$PWD/../transport/unixsocket \
-    $$PWD/../transport/websocket
+TEMPLATE = lib
+CONFIG += staticlib
 
-include($$PWD/../transport/transport.pri)
-include($$PWD/../ipc/ipc.pri)
+QT += webenginewidgets
+
+INCLUDEPATH += \
+    $$PWD/../ \
 
 SOURCES += \
     $$PWD/eventmanager.cpp \

@@ -1,8 +1,8 @@
 #ifndef UNIXSOCKETIPCTRANSPORT_HPP
 #define UNIXSOCKETIPCTRANSPORT_HPP
 
-#include "ipctransportlayer.hpp"
-#include "ipcclient.hpp"
+#include <ipc/ipctransportlayer.hpp>
+#include <ipc/ipcclient.hpp>
 
 class QLocalServer;
 class QLocalSocket;
