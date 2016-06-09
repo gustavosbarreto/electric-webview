@@ -7,9 +7,9 @@
 #include <QTimer>
 #include <QCoreApplication>
 
-#include "tcpipctransport.hpp"
-#include "unixsocketipctransport.hpp"
-#include "websocketipctransport.hpp"
+#include <transport/tcp/tcpipctransport.hpp>
+#include <transport/unixsocket/unixsocketipctransport.hpp>
+#include <transport/websocket/websocketipctransport.hpp>
 
 IpcServer::IpcServer(QObject *parent)
     : QObject(parent)

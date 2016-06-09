@@ -3,8 +3,9 @@
 #include <QWebEngineView>
 
 #include "instantwebview.hpp"
-#include "ipcclient.hpp"
 #include "inputeventfilter.hpp"
+
+#include <ipc/ipcclient.hpp>
 
 EventManager::EventManager(QObject *parent)
     : QObject(parent)

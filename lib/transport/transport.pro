@@ -1,3 +1,17 @@
+TEMPLATE = lib
+CONFIG += staticlib
+
+QT += network websockets
+
+INCLUDEPATH += \
+    $$PWD/../
+
+SOURCES += \
+    $$PWD/../ipc/ipctransportlayer.cpp
+
+HEADERS += \
+    $$PWD/../ipc/ipctransportlayer.hpp
+
 # TCP transport
 
 SOURCES += \

@@ -1,8 +1,8 @@
 #ifndef WEBSOCKETIPCTRANSPORT_HPP
 #define WEBSOCKETIPCTRANSPORT_HPP
 
-#include "ipctransportlayer.hpp"
-#include "ipcclient.hpp"
+#include <ipc/ipctransportlayer.hpp>
+#include <ipc/ipcclient.hpp>
 
 class QWebSocketServer;
 class QWebSocket;

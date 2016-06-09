@@ -7,7 +7,8 @@
 #include <QPointer>
 
 #include "ipcclient.hpp"
-#include "command.hpp"
+
+#include <core/command.hpp>
 
 class QTcpServer;
 class QTcpSocket;

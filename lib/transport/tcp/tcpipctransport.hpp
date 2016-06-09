@@ -1,8 +1,8 @@
 #ifndef TCPIPCTRANSPORT_HPP
 #define TCPIPCTRANSPORT_HPP
 
-#include "ipctransportlayer.hpp"
-#include "ipcclient.hpp"
+#include <ipc/ipctransportlayer.hpp>
+#include <ipc/ipcclient.hpp>
 
 class QTcpServer;
 class QTcpSocket;

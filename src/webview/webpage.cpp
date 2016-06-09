@@ -1,7 +1,7 @@
 #include "webpage.hpp"
 
-#include "instantwebview.hpp"
-#include "eventmanager.hpp"
+#include <core/instantwebview.hpp>
+#include <core/eventmanager.hpp>
 
 WebPage::WebPage(QObject *parent)
     : QWebEnginePage(parent)

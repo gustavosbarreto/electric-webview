@@ -6,10 +6,11 @@
 #include <QBuffer>
 #include <QProcess>
 
-#include "ipcclient.hpp"
 #include "eventmanager.hpp"
 #include "instantwebview.hpp"
 #include "inputeventfilter.hpp"
+
+#include <ipc/ipcclient.hpp>
 
 CommandHandler::CommandHandler(QObject *parent)
     : QObject(parent)

@@ -4,14 +4,17 @@ CONFIG += c++11
 
 TARGET = instant-webview
 
-include($$PWD/../core/core.pri)
-
 INCLUDEPATH += \
-    $$PWD/../core
+    $$PWD/../../lib
 
 SOURCES += \
     main.cpp \
     webpage.cpp
+
+LIBS += \
+    -L$$PWD/../../lib/core -lcore \
+    -L$$PWD/../../lib/ipc -lipc \
+    -L$$PWD/../../lib/transport -ltransport
 
 RESOURCES += resources.qrc
 
