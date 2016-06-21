@@ -7,8 +7,8 @@ INCLUDEPATH += \
     $$PWD/../
 
 LIBS += \
-    -L$$PWD/../core -lcore \
-    -L$$PWD/../transport -ltransport
+    -L$$OUT_PWD/../core -lcore \
+    -L$$OUT_PWD/../transport -ltransport
 
 # Server
 

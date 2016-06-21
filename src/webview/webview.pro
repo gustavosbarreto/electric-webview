@@ -12,9 +12,9 @@ SOURCES += \
     webpage.cpp
 
 LIBS += \
-    -L$$PWD/../../lib/core -lcore \
-    -L$$PWD/../../lib/ipc -lipc \
-    -L$$PWD/../../lib/transport -ltransport
+    -L$$OUT_PWD/../../lib/core -lcore \
+    -L$$OUT_PWD/../../lib/ipc -lipc \
+    -L$$OUT_PWD/../../lib/transport -ltransport
 
 RESOURCES += resources.qrc
 
