@@ -216,3 +216,32 @@ name and returned data, separated by space.
     the command will be started detached and the output will be ignored,
     otherwise `sync` is given, the execution is blocked until the command has
     finished and the output will be send in the response message.
+
+# API
+
+## Shell Script
+
+To send commands to Instant WebView in your script you need to load the following
+Shell Script library file:
+
+```
+$PREFIX/share/instant-webview/shellscript.sh
+```
+
+Where `$PREFIX` is the prefix where you installed Instant WebView.
+
+Before loading the library you must set `INSTANT_WEBVIEW_TRANSPORT` environment
+variable to the transport layer you are using in Instant WebView.
+
+Example:
+
+```sh
+#!/bin/sh
+
+INSTANT_WEBVIEW_TRANSPORT=unixsocket:/tmp/instant-webview
+
+. /usr/share/instant-webview/shellscript.sh
+
+open maximized
+load http://google.com
+```
