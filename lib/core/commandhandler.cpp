@@ -5,6 +5,8 @@
 #include <QEventLoop>
 #include <QBuffer>
 #include <QProcess>
+#include <QDesktopWidget>
+#include <QApplication>
 
 #include "eventmanager.hpp"
 #include "instantwebview.hpp"
@@ -37,10 +39,12 @@ void CommandHandler::processCommand(const Command &command) const
     } else if (command.name() == "open") {
         QString mode = command.arguments().value(0);
 
-        if (mode == "maximized")
+        if (mode == "maximized") {
             webView->showMaximized();
-        else if (mode == "fullscreen")
+        } else if (mode == "fullscreen") {
+            webView->setGeometry(qApp->desktop()->screenGeometry());
             webView->showFullScreen();
+        }
     } else if (command.name() == "close") {
         webView->close();
     } else if (command.name() == "current_url") {
