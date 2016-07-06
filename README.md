@@ -217,6 +217,9 @@ name and returned data, separated by space.
     otherwise `sync` is given, the execution is blocked until the command has
     finished and the output will be send in the response message.
 
+* `quit [code]`
+  - Tells the application to exit with a return `code`.
+
 # API
 
 ## Shell Script

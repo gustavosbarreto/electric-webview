@@ -70,3 +70,6 @@ alias @get_html="__instant_webview_get_html true $@"
 
 alias exec_cmd="__instant_webview_send exec_cmd false $@"
 alias @exec_cmd="__instant_webview_send exec_cmd true $@"
+
+alias quit="__instant_webview_send quit false $@"
+alias @quit="__instant_webview_send quit true $@"

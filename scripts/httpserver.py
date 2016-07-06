@@ -181,6 +181,11 @@ class CommandsHandler(BaseHTTPServer.BaseHTTPRequestHandler):
             reply = webview.exec_cmd(execution_param, cmd_param, args=args_param.split())
             self.send_reply(reply)
 
+        if url.path == '/quit':
+            code_param = query.get('code', [''])[0]
+            webview.quit(code_param)
+            self.send_reply()
+
     def do_POST(self):
         url = urlparse.urlparse(self.path)
         webview = WebView(args.transport)

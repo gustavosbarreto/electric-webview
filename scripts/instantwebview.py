@@ -86,3 +86,6 @@ class WebView:
 
         if reply is not None:
             return reply
+
+    def quit(self, exit_code):
+        self.send_command('quit', [exit_code], wait_for_reply=False)

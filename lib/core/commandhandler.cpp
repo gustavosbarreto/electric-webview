@@ -131,6 +131,9 @@ void CommandHandler::processCommand(const Command &command) const
         } else {
             QProcess::startDetached(command.arguments().mid(1, -1).join(' '));
         }
+    } else if (command.name() == "quit") {
+        int exitCode = command.arguments().value(0).toInt();
+        qApp->exit(exitCode);
     }
 }
 
