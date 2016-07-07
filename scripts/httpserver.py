@@ -23,6 +23,7 @@ events = [
 
 parser = argparse.ArgumentParser(description='Instant WebView HTTP Interface')
 parser.add_argument('-t', '--transport', type=str, required=True, help='Transport layer')
+parser.add_argument('-a', '--address', type=str, required=True, help='Address to listen')
 parser.add_argument('-p', '--port', type=int, required=True, help='Port to listen')
 args = parser.parse_args()
 
@@ -214,5 +215,5 @@ class CommandsHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 class ThreadedHTTPServer(SocketServer.ThreadingMixIn, BaseHTTPServer.HTTPServer):
     pass
 
-httpd = ThreadedHTTPServer(('0.0.0.0', args.port), CommandsHandler)
+httpd = ThreadedHTTPServer((args.address, args.port), CommandsHandler)
 httpd.serve_forever()
