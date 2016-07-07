@@ -7,10 +7,11 @@ RUN apt-get update && \
     apt-add-repository -y ppa:beineri/opt-qt561-trusty && \
     apt-add-repository -y ppa:ubuntu-toolchain-r/test && \
     apt-get update && \
-    apt-get install -y gcc-6 g++-6 build-essential mesa-common-dev libglu1-mesa-dev xvfb python && \
+    apt-get install -y gcc-6 g++-6 build-essential mesa-common-dev libglu1-mesa-dev xvfb python dbus && \
     apt-get install -y qt56tools qt56script qt56webengine qt56webchannel qt56websockets qt56declarative qt56x11extras
 
 RUN rm -rf /var/lib/apt/lists/*
+RUN dbus-uuidgen > /var/lib/dbus/machine-id
 
 ENV QTDIR=/opt/qt56
 ENV PATH=$QTDIR/bin:$PATH
