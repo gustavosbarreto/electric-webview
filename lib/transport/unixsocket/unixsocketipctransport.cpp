@@ -4,6 +4,8 @@
 #include <QLocalSocket>
 #include <QTimer>
 #include <QCoreApplication>
+#include <QFileInfo>
+#include <QDir>
 
 UnixSocketIpcTransport::UnixSocketIpcTransport()
 {
@@ -12,9 +14,10 @@ UnixSocketIpcTransport::UnixSocketIpcTransport()
 void UnixSocketIpcTransport::initialize()
 {
     QString name = m_options.value(1);
+    QFileInfo fileInfo(name);
 
-    if (name.isEmpty())
-        name = "instant-webview";
+    if (!fileInfo.isAbsolute())
+        name = name.prepend(QDir::currentPath() + "/");
 
     QLocalServer::removeServer(name);
 
