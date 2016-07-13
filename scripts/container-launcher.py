@@ -9,10 +9,17 @@ parser = argparse.ArgumentParser(description='Instant WebView Container')
 parser.add_argument('-t', '--transport', type=str, required=True, help='Transport layer')
 parser.add_argument('-x', '--x11', required=False, action='store_true', help='Enable X11 forwarding')
 parser.add_argument('-r', '--resolution', required=False, default='', help='Set headless screen resolution')
+parser.add_argument('-s', '--script', required=False, help='Script to run')
 args = parser.parse_args()
 
 docker_image = os.environ.get('DOCKER_IMAGE', 'gustavosbarreto/instant-webview')
 docker_run_options = ['--rm']
+
+if args.script:
+    directory = os.path.join(os.path.realpath(os.getcwd()), '')
+    file = os.path.realpath(args.script)
+    if not os.path.commonprefix([file, directory]) == directory:
+        print('The script file must be located in the current working directory')
 
 transport = args.transport.split(':')
 transport_protocol = transport[0] if transport[0:] else None
