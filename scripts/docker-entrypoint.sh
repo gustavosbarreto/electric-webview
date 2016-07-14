@@ -4,7 +4,7 @@ trap 'kill $INSTANT_WEBVIEW_PID; exit 1' SIGTERM
 
 function install() {
     echo "#!/bin/sh
-/usr/bin/cat > instant-webview-container-launcher <<-EOF
+$(/usr/bin/which cat) > instant-webview-container-launcher <<-EOF
 $(cat /usr/src/instant-webview/scripts/container-launcher.py)
 EOF
 chmod +x instant-webview-container-launcher"
