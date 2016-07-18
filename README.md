@@ -103,6 +103,8 @@ echo "load http://google.com" | nc -U /tmp/instant-webview
 
 In the below example a maximized window is open and the http://google.com is loaded.
 
+See the [Scripting section](#Scripting) for details on how to use scripts.
+
 ## Single-shot commands
 
 Single-shot commands might be used to wait until command response is received.
@@ -220,12 +222,9 @@ name and returned data, separated by space.
 * `quit [code]`
   - Tells the application to exit with a return `code`.
 
-# API
+# Scripting
 
-## Shell Script
-
-To send commands to Instant WebView in your script you need to load the following
-Shell Script library file:
+You can use scripts with Instant WebView loading the following Shell script library file:
 
 ```
 $PREFIX/share/instant-webview/shellscript.sh
@@ -234,7 +233,7 @@ $PREFIX/share/instant-webview/shellscript.sh
 Where `$PREFIX` is the prefix where you installed Instant WebView.
 
 Before loading the library you must set `INSTANT_WEBVIEW_TRANSPORT` environment
-variable to the transport layer you are using in Instant WebView.
+variable to the transport layer you are using in your instance of Instant WebView.
 
 Example:
 
