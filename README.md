@@ -1,8 +1,8 @@
 # Introduction
 
-[![Build Status](https://travis-ci.org/gustavosbarreto/instant-webview.svg?branch=master)](https://travis-ci.org/gustavosbarreto/instant-webview)
+[![Build Status](https://travis-ci.org/gustavosbarreto/electric-webview.svg?branch=master)](https://travis-ci.org/gustavosbarreto/electric-webview)
 
-Instant WebView is a scriptable WebView for developers.
+Electric WebView is a scriptable WebView for developers.
 
 The WebView uses the QtWebEngine (which is based on Chromium) to render the HTML
 content. There is also a simple protocol to get data, send commands and
@@ -23,7 +23,7 @@ address bar, status bar, navigation buttons, etc.
 
 # Building
 
-Before building Instant WebView you need to install GCC 6, Qt and QtWebEngine 5.6 on the system.
+Before building Electric WebView you need to install GCC 6, Qt and QtWebEngine 5.6 on the system.
 
 ```sh
 qmake PREFIX=/usr
@@ -33,13 +33,13 @@ make install
 
 # Usage
 
-### instant-webview
+### electric-webview
 
 The WebView itself.
 
 ```
-Usage: instant-webview [options]
-Instant WebView is a scriptable WebView for developers.
+Usage: electric-webview [options]
+Electric WebView is a scriptable WebView for developers.
 
 Options:
   -h, --help                                  Displays this help.
@@ -54,16 +54,16 @@ Options:
 **Example:**
 
 ```sh
-instant-webview -t unixsocket:/tmp/instant-webview
+electric-webview -t unixsocket:/tmp/electric-webview
 ```
 
-### instant-webview-ctl
+### electric-webview-ctl
 
 A utility to interact with the WebView.
 
 ```
-Usage: instant-webview-ctl [options] command
-Instant WebView is a scriptable WebView for developers.
+Usage: electric-webview-ctl [options] command
+Electric WebView is a scriptable WebView for developers.
 
 Options:
   -h, --help                                  Displays this help.
@@ -78,27 +78,27 @@ Arguments:
 **Example:**
 
 ```sh
-echo "open maximized" | instant-webview-ctl -t unixsocket:/tmp/instant-webview -
+echo "open maximized" | electric-webview-ctl -t unixsocket:/tmp/electric-webview -
 ```
 
 # Commands
 
-Instant WebView reads commands from TCP, Unix Socket or WebSocket. Each command starts
+Electric WebView reads commands from TCP, Unix Socket or WebSocket. Each command starts
 with the name of a command and is terminated by a newline. Empty line are interpreted
 as end of connection.
 
 If the command starts with `@` the command is marked as single-shot.
 
 Due to the simplicity of the protocol, it is possible to interact with the WebView
-using the command-line utility GNU Netcat. However, there is `instant-webview-ctl`
+using the command-line utility GNU Netcat. However, there is `electric-webview-ctl`
 utility that can be used to interact with the WebView, so you don't need extra
 tools to interact with the WebView.
 
 Simple example using the GNU Netcat utility to demonstrate how simple is the protocol:
 
 ```sh
-echo "open maximized" | nc -U /tmp/instant-webview
-echo "load http://google.com" | nc -U /tmp/instant-webview
+echo "open maximized" | nc -U /tmp/electric-webview
+echo "load http://google.com" | nc -U /tmp/electric-webview
 ```
 
 In the below example a maximized window is open and the http://google.com is loaded.
@@ -108,11 +108,11 @@ See the [Scripting section](#Scripting) for details on how to use scripts.
 ## Single-shot commands
 
 Single-shot commands might be used to wait until command response is received.
-It might be useful to get data from the WebView using both `instant-webview-ctl`
+It might be useful to get data from the WebView using both `electric-webview-ctl`
 and GNU Netcat utility.
 
 ```sh
-URL=$(echo "@current_url" | instant-webview-ctl -t unixsocket:/tmp/instant-webview)
+URL=$(echo "@current_url" | electric-webview-ctl -t unixsocket:/tmp/electric-webview)
 echo "The current URL is $URL"
 ```
 
@@ -205,7 +205,7 @@ name and returned data, separated by space.
     keystrokes or mouse clicks. The `IDLE_TIME` is the milliseconds since the
     last user activity.
 
-## Instant WebView
+## Electric WebView
 
 * `idle_time`
   - Returns the idle time from the last user activity in milliseconds.
@@ -224,25 +224,25 @@ name and returned data, separated by space.
 
 # Scripting
 
-You can use scripts with Instant WebView loading the following Shell script library file:
+You can use scripts with Electric WebView loading the following Shell script library file:
 
 ```
-$PREFIX/share/instant-webview/shellscript.sh
+$PREFIX/share/electric-webview/shellscript.sh
 ```
 
-Where `$PREFIX` is the prefix where you installed Instant WebView.
+Where `$PREFIX` is the prefix where you installed Electric WebView.
 
-Before loading the library you must set `INSTANT_WEBVIEW_TRANSPORT` environment
-variable to the transport layer you are using in your instance of Instant WebView.
+Before loading the library you must set `ELECTRIC_WEBVIEW_TRANSPORT` environment
+variable to the transport layer you are using in your instance of Electric WebView.
 
 Example:
 
 ```sh
 #!/bin/sh
 
-INSTANT_WEBVIEW_TRANSPORT=unixsocket:/tmp/instant-webview
+ELECTRIC_WEBVIEW_TRANSPORT=unixsocket:/tmp/electric-webview
 
-. /usr/share/instant-webview/shellscript.sh
+. /usr/share/electric-webview/shellscript.sh
 
 open maximized
 load http://google.com

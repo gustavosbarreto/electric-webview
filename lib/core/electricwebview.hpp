@@ -1,5 +1,5 @@
-#ifndef INSTANTWEBVIEW_HPP
-#define INSTANTWEBVIEW_HPP
+#ifndef ELECTRICWEBVIEW_HPP
+#define ELECTRICWEBVIEW_HPP
 
 #include <QString>
 
@@ -9,10 +9,10 @@ class EventManager;
 class CommandHandler;
 class InputEventFilter;
 
-class InstantWebView
+class ElectricWebView
 {
 public:
-    static InstantWebView *instance();
+    static ElectricWebView *instance();
 
     void initialize();
 
@@ -26,7 +26,7 @@ public:
     InputEventFilter *inputEventFilter() const;
 
 private:
-    InstantWebView();
+    ElectricWebView();
 
     QWebEngineView *m_webView;
     EventManager *m_eventManager;
@@ -34,4 +34,4 @@ private:
     InputEventFilter *m_inputEventFilter;
 };
 
-#endif // INSTANTWEBVIEW_HPP
+#endif // ELECTRICWEBVIEW_HPP

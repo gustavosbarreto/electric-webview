@@ -9,7 +9,7 @@
 #include <QApplication>
 
 #include "eventmanager.hpp"
-#include "instantwebview.hpp"
+#include "electricwebview.hpp"
 #include "inputeventfilter.hpp"
 
 #include <ipc/ipcclient.hpp>
@@ -21,7 +21,7 @@ CommandHandler::CommandHandler(QObject *parent)
 
 void CommandHandler::processCommand(const Command &command) const
 {
-    QWebEngineView *webView = InstantWebView::instance()->webView();
+    QWebEngineView *webView = ElectricWebView::instance()->webView();
 
     if (command.name() == "load") {
         if (command.arguments().isEmpty())
@@ -111,15 +111,15 @@ void CommandHandler::processCommand(const Command &command) const
             Event event(command);
             event.setName(eventName);
 
-            InstantWebView::instance()->eventManager()->subscribe(event);
+            ElectricWebView::instance()->eventManager()->subscribe(event);
         }
     } else if (command.name() == "exec_js") {
         processJavaScriptCommand(command);
     } else if (command.name() == "idle_time") {
-        command.sendResponse(QString("%1").arg(InstantWebView::instance()->inputEventFilter()->idle()).toLocal8Bit());
+        command.sendResponse(QString("%1").arg(ElectricWebView::instance()->inputEventFilter()->idle()).toLocal8Bit());
     } else if (command.name() == "block_user_activity") {
         bool block = QVariant(command.arguments().value(0)).toBool();
-        InstantWebView::instance()->inputEventFilter()->setBlock(block);
+        ElectricWebView::instance()->inputEventFilter()->setBlock(block);
     } else if (command.name() == "exec_cmd") {
         bool sync = command.arguments().value(0) == "sync";
 
@@ -154,7 +154,7 @@ void CommandHandler::processScreenshotCommand(const Command &command) const
     QByteArray data;
     QBuffer buffer(&data);
 
-    QPixmap pixmap = InstantWebView::instance()->webView()->grab(rect);
+    QPixmap pixmap = ElectricWebView::instance()->webView()->grab(rect);
     pixmap.save(&buffer, "JPG");
 
     command.sendResponse(data.toBase64());
@@ -180,12 +180,12 @@ void CommandHandler::processJavaScriptCommand(const Command &command) const
     };
 
     if (type == "string") {
-        InstantWebView::instance()->webView()->page()->runJavaScript(value, processJavaScriptResponse);
+        ElectricWebView::instance()->webView()->page()->runJavaScript(value, processJavaScriptResponse);
     } else if (type == "file") {
         QFile file(value);
         file.open(QFile::ReadOnly);
 
-        InstantWebView::instance()->webView()->page()->runJavaScript(file.readAll(), processJavaScriptResponse);
+        ElectricWebView::instance()->webView()->page()->runJavaScript(file.readAll(), processJavaScriptResponse);
     } else {
         return;
     }

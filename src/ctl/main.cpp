@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
 
     QCommandLineParser cmdParser;
     cmdParser.setSingleDashWordOptionMode(QCommandLineParser::ParseAsCompactedShortOptions);
-    cmdParser.setApplicationDescription("Instant WebView is a scriptable WebView for developers.");
+    cmdParser.setApplicationDescription("Electric WebView is a scriptable WebView for developers.");
     cmdParser.addHelpOption();
     cmdParser.addVersionOption();
     cmdParser.addOption(QCommandLineOption(QStringList() << "t" << "transport", "IPC Transport Layer to use.", "tcp|unixsocket|websocket"));

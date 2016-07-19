@@ -1,6 +1,6 @@
 #include "webpage.hpp"
 
-#include <core/instantwebview.hpp>
+#include <core/electricwebview.hpp>
 #include <core/eventmanager.hpp>
 
 WebPage::WebPage(QObject *parent)
@@ -22,7 +22,7 @@ void WebPage::javaScriptConsoleMessage(QWebEnginePage::JavaScriptConsoleMessageL
     else if (level == QWebEnginePage::ErrorMessageLevel)
         eventName = "error_message_raised";
 
-    const QList<Event> &subscribers = InstantWebView::instance()->eventManager()->subscribers(eventName);
+    const QList<Event> &subscribers = ElectricWebView::instance()->eventManager()->subscribers(eventName);
     foreach (const Event &event, subscribers) {
         event.sendResponse(message.toLocal8Bit());
     }

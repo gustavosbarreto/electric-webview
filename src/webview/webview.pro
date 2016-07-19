@@ -2,7 +2,7 @@ QT = gui widgets webenginewidgets websockets network
 
 CONFIG += c++11
 
-TARGET = instant-webview
+TARGET = electric-webview
 
 INCLUDEPATH += \
     $$PWD/../../lib

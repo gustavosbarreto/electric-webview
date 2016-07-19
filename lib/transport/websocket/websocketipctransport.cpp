@@ -19,7 +19,7 @@ void WebSocketIpcTransport::initialize()
     if (port.isEmpty())
         port = "38395";
 
-    m_socketServer = new QWebSocketServer("instant-webview", QWebSocketServer::NonSecureMode);
+    m_socketServer = new QWebSocketServer("electric-webview", QWebSocketServer::NonSecureMode);
     m_socketServer->listen(QHostAddress(host), port.toInt());
 
     if (m_socketServer->isListening()) {
@@ -108,4 +108,3 @@ IpcClient *WebSocketIpcClient::newClient(const QStringList &args, bool reverse)
 
     return client;
 }
-
