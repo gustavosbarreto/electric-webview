@@ -2,7 +2,7 @@ QT = gui widgets webenginewidgets websockets network
 
 CONFIG += c++11
 
-TARGET = instant-webview-ctl
+TARGET = electric-webview-ctl
 
 INCLUDEPATH += \
     $$PWD/../../lib
@@ -16,7 +16,7 @@ LIBS += \
     -L$$OUT_PWD/../../lib/transport -ltransport
 
 scripts.files = $$PWD/shellscript.sh
-scripts.path = $$PREFIX/share/instant-webview/
+scripts.path = $$PREFIX/share/electric-webview/
 
 target.path = $$PREFIX/bin
 

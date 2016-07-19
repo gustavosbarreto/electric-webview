@@ -8,7 +8,7 @@ import SocketServer
 import re
 import argparse
 
-from instantwebview import WebView
+from electricwebview import WebView
 
 events = [
     'url_changed',
@@ -21,7 +21,7 @@ events = [
     'user_activity'
 ]
 
-parser = argparse.ArgumentParser(description='Instant WebView HTTP Interface')
+parser = argparse.ArgumentParser(description='Electric WebView HTTP Interface')
 parser.add_argument('-t', '--transport', type=str, required=True, help='Transport layer')
 parser.add_argument('-a', '--address', type=str, required=True, help='Address to listen')
 parser.add_argument('-p', '--port', type=int, required=True, help='Port to listen')

@@ -2,7 +2,7 @@
 
 #include <QWebEngineView>
 
-#include "instantwebview.hpp"
+#include "electricwebview.hpp"
 #include "inputeventfilter.hpp"
 
 #include <ipc/ipcclient.hpp>
@@ -14,7 +14,7 @@ EventManager::EventManager(QObject *parent)
 
 void EventManager::bind()
 {
-    QWebEngineView *webView = InstantWebView::instance()->webView();
+    QWebEngineView *webView = ElectricWebView::instance()->webView();
 
     // url_changed EVENT
     connect(webView, &QWebEngineView::urlChanged, [=](const QUrl &url) {
@@ -45,7 +45,7 @@ void EventManager::bind()
     });
 
     // user_activity EVENT
-    connect(InstantWebView::instance()->inputEventFilter(), &InputEventFilter::activity, [=](int idleTime) {
+    connect(ElectricWebView::instance()->inputEventFilter(), &InputEventFilter::activity, [=](int idleTime) {
         foreach (const Event &event, m_subscribers["user_activity"]) {
             event.sendResponse(QString("%1").arg(idleTime).toUtf8());
             if (event.isSingleShot())

@@ -1,6 +1,6 @@
 # HTTP Server Documentation
 
-An HTTP interface for Instant WebView.
+An HTTP interface for Electric WebView.
 
 ### Usage
 

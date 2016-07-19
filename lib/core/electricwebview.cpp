@@ -1,4 +1,4 @@
-#include "instantwebview.hpp"
+#include "electricwebview.hpp"
 
 #include <QCoreApplication>
 #include <QProcess>
@@ -10,20 +10,20 @@
 #include "eventmanager.hpp"
 #include "inputeventfilter.hpp"
 
-InstantWebView *InstantWebView::instance()
+ElectricWebView *ElectricWebView::instance()
 {
-    static InstantWebView *instance = new InstantWebView;
+    static ElectricWebView *instance = new ElectricWebView;
     return instance;
 }
 
-void InstantWebView::initialize()
+void ElectricWebView::initialize()
 {
     m_eventManager->bind();
 
     qApp->installEventFilter(m_inputEventFilter);
 }
 
-void InstantWebView::runScript(const QString &transport, const QString &fileName)
+void ElectricWebView::runScript(const QString &transport, const QString &fileName)
 {
     QProcessEnvironment env(QProcessEnvironment::systemEnvironment());
     env.insert("INSTANT_WEBVIEW_TRANSPORT", transport);
@@ -61,35 +61,35 @@ void InstantWebView::runScript(const QString &transport, const QString &fileName
     process->start("sh", QStringList() << file->fileName());
 }
 
-InstantWebView::InstantWebView()
+ElectricWebView::ElectricWebView()
 {
     m_eventManager = new EventManager;
     m_commandHandler = new CommandHandler();
     m_inputEventFilter = new InputEventFilter;
 }
 
-InputEventFilter *InstantWebView::inputEventFilter() const
+InputEventFilter *ElectricWebView::inputEventFilter() const
 {
     return m_inputEventFilter;
 }
 
-CommandHandler *InstantWebView::commandHandler() const
+CommandHandler *ElectricWebView::commandHandler() const
 {
     return m_commandHandler;
 }
 
 
-EventManager *InstantWebView::eventManager() const
+EventManager *ElectricWebView::eventManager() const
 {
     return m_eventManager;
 }
 
-QWebEngineView *InstantWebView::webView() const
+QWebEngineView *ElectricWebView::webView() const
 {
     return m_webView;
 }
 
-void InstantWebView::setWebView(QWebEngineView *webView)
+void ElectricWebView::setWebView(QWebEngineView *webView)
 {
     m_webView = webView;
 }

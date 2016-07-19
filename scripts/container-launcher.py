@@ -5,14 +5,14 @@ import os
 import subprocess
 import signal
 
-parser = argparse.ArgumentParser(description='Instant WebView Container')
+parser = argparse.ArgumentParser(description='Electric WebView Container')
 parser.add_argument('-t', '--transport', type=str, required=True, help='Transport layer')
 parser.add_argument('-x', '--x11', required=False, action='store_true', help='Enable X11 forwarding')
 parser.add_argument('-r', '--resolution', required=False, default='', help='Set headless screen resolution')
 parser.add_argument('-s', '--script', required=False, help='Script to run')
 args = parser.parse_args()
 
-docker_image = os.environ.get('DOCKER_IMAGE', 'gustavosbarreto/instant-webview')
+docker_image = os.environ.get('DOCKER_IMAGE', 'gustavosbarreto/electric-webview')
 docker_run_options = ['--rm']
 
 if args.script:

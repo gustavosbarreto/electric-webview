@@ -8,7 +8,7 @@
 
 #include <ipc/ipcserver.hpp>
 #include <core/commandhandler.hpp>
-#include <core/instantwebview.hpp>
+#include <core/electricwebview.hpp>
 
 #include <transport/unixsocket/unixsocketipctransport.hpp>
 #include <transport/tcp/tcpipctransport.hpp>
@@ -18,12 +18,12 @@ int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
     app.setQuitOnLastWindowClosed(false);
-    app.setApplicationName("instant-webview");
+    app.setApplicationName("electric-webview");
     app.setApplicationVersion("1.0");
 
     QCommandLineParser cmdParser;
     cmdParser.setSingleDashWordOptionMode(QCommandLineParser::ParseAsCompactedShortOptions);
-    cmdParser.setApplicationDescription("Instant WebView is a scriptable WebView for developers.");
+    cmdParser.setApplicationDescription("Electric WebView is a scriptable WebView for developers.");
     cmdParser.addHelpOption();
     cmdParser.addVersionOption();
     cmdParser.addOption(QCommandLineOption(QStringList() << "t" << "transport", "IPC Transport Layer to use.", "tcp|unixsocket|websocket"));
@@ -45,14 +45,14 @@ int main(int argc, char *argv[])
     QWebEngineView *webView = new QWebEngineView;
     webView->setPage(new WebPage);
 
-    InstantWebView::instance()->setWebView(webView);
+    ElectricWebView::instance()->setWebView(webView);
 
-    InstantWebView::instance()->initialize();
+    ElectricWebView::instance()->initialize();
 
-    QObject::connect(ipcServer, &IpcServer::newCommand, InstantWebView::instance()->commandHandler(), &CommandHandler::processCommand);
+    QObject::connect(ipcServer, &IpcServer::newCommand, ElectricWebView::instance()->commandHandler(), &CommandHandler::processCommand);
 
     if (cmdParser.isSet("script"))
-        InstantWebView::instance()->runScript(cmdParser.value("transport"), cmdParser.value("script"));
+        ElectricWebView::instance()->runScript(cmdParser.value("transport"), cmdParser.value("script"));
 
     return app.exec();
 }

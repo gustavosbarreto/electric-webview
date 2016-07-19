@@ -4,14 +4,14 @@ trap 'kill $INSTANT_WEBVIEW_PID; exit 1' SIGTERM
 
 function install() {
     echo "#!/bin/sh
-$(/usr/bin/which cat) > instant-webview-container-launcher <<-EOF
-$(cat /usr/src/instant-webview/scripts/container-launcher.py)
+$(/usr/bin/which cat) > electric-webview-container-launcher <<-EOF
+$(cat /usr/src/electric-webview/scripts/container-launcher.py)
 EOF
-chmod +x instant-webview-container-launcher"
+chmod +x electric-webview-container-launcher"
 }
 
 function setup() {
-    useradd --shell /bin/bash -u $LOCAL_USER -o -c "" -m instant-webview
+    useradd --shell /bin/bash -u $LOCAL_USER -o -c "" -m electric-webview
 
     if [ -n "$XAUTH" ]; then
         export XAUTHORITY=/tmp/.Xauthority
@@ -39,19 +39,19 @@ function run() {
         ADDRESS=$(echo $TRANSPORT | cut -f2 -d:)
         PORT=$(echo $TRANSPORT | cut -f3 -d:)
 
-        INSTANT_WEBVIEW_COMMAND=(/usr/local/bin/instant-webview -t unixsocket:/tmp/instant-webview)
+        INSTANT_WEBVIEW_COMMAND=(/usr/local/bin/electric-webview -t unixsocket:/tmp/electric-webview)
 
-        /usr/src/instant-webview/scripts/httpserver.py -t unixsocket:/tmp/instant-webview -a $ADDRESS -p $PORT &
+        /usr/src/electric-webview/scripts/httpserver.py -t unixsocket:/tmp/electric-webview -a $ADDRESS -p $PORT &
         echo "http: Listening on port $PORT"
     else
-        INSTANT_WEBVIEW_COMMAND=(/usr/local/bin/instant-webview -t $TRANSPORT)
+        INSTANT_WEBVIEW_COMMAND=(/usr/local/bin/electric-webview -t $TRANSPORT)
     fi
 
     if [ -z "$XAUTH" ]; then
         INSTANT_WEBVIEW_COMMAND=(xvfb-run -a -s "-screen 0 ${RESOLUTION}x16" ${INSTANT_WEBVIEW_COMMAND[@]})
     fi
 
-    gosu instant-webview "${INSTANT_WEBVIEW_COMMAND[@]}" &
+    gosu electric-webview "${INSTANT_WEBVIEW_COMMAND[@]}" &
     INSTANT_WEBVIEW_PID=$!
     wait $INSTANT_WEBVIEW_PID
 }

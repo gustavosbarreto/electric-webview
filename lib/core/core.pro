@@ -12,7 +12,7 @@ SOURCES += \
     $$PWD/command.cpp \
     $$PWD/event.cpp \
     $$PWD/inputeventfilter.cpp \
-    $$PWD/instantwebview.cpp
+    $$PWD/electricwebview.cpp
 
 HEADERS += \
     $$PWD/eventmanager.hpp \
@@ -20,4 +20,4 @@ HEADERS += \
     $$PWD/command.hpp \
     $$PWD/event.hpp \
     $$PWD/inputeventfilter.hpp \
-    $$PWD/instantwebview.hpp
+    $$PWD/electricwebview.hpp

@@ -23,14 +23,14 @@ ENV PATH=$QTDIR/bin:$PATH
 ENV LD_LIBRARY_PATH=$QTDIR/lib/x86_64-linux-gnu:$QTDIR/lib:$LD_LIBRARY_PATH
 ENV PKG_CONFIG_PATH=$QTDIR/lib/pkgconfig:$PKG_CONFIG_PATH
 
-ADD . /usr/src/instant-webview
+ADD . /usr/src/electric-webview
 
 RUN mkdir /tmp/build
 
 WORKDIR /tmp/build
 
-RUN qmake PREFIX=/usr/local QMAKE_CXX="g++-6" /usr/src/instant-webview
+RUN qmake PREFIX=/usr/local QMAKE_CXX="g++-6" /usr/src/electric-webview
 RUN make -j$(nproc)
 RUN make install
 
-ENTRYPOINT ["/usr/src/instant-webview/scripts/docker-entrypoint.sh"]
+ENTRYPOINT ["/usr/src/electric-webview/scripts/docker-entrypoint.sh"]
