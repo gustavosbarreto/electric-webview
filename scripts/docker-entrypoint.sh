@@ -1,6 +1,6 @@
 #!/bin/bash
 
-trap 'kill $INSTANT_WEBVIEW_PID; exit 1' SIGTERM
+trap 'kill $ELECTRIC_WEBVIEW_PID; exit 1' SIGTERM
 
 function install() {
     echo "#!/bin/sh
@@ -39,21 +39,21 @@ function run() {
         ADDRESS=$(echo $TRANSPORT | cut -f2 -d:)
         PORT=$(echo $TRANSPORT | cut -f3 -d:)
 
-        INSTANT_WEBVIEW_COMMAND=(/usr/local/bin/electric-webview -t unixsocket:/tmp/electric-webview)
+        ELECTRIC_WEBVIEW_COMMAND=(/usr/local/bin/electric-webview -t unixsocket:/tmp/electric-webview)
 
         /usr/src/electric-webview/scripts/httpserver.py -t unixsocket:/tmp/electric-webview -a $ADDRESS -p $PORT &
         echo "http: Listening on port $PORT"
     else
-        INSTANT_WEBVIEW_COMMAND=(/usr/local/bin/electric-webview -t $TRANSPORT)
+        ELECTRIC_WEBVIEW_COMMAND=(/usr/local/bin/electric-webview -t $TRANSPORT)
     fi
 
     if [ -z "$XAUTH" ]; then
-        INSTANT_WEBVIEW_COMMAND=(xvfb-run -a -s "-screen 0 ${RESOLUTION}x16" ${INSTANT_WEBVIEW_COMMAND[@]})
+        ELECTRIC_WEBVIEW_COMMAND=(xvfb-run -a -s "-screen 0 ${RESOLUTION}x16" ${ELECTRIC_WEBVIEW_COMMAND[@]})
     fi
 
-    gosu electric-webview "${INSTANT_WEBVIEW_COMMAND[@]}" &
-    INSTANT_WEBVIEW_PID=$!
-    wait $INSTANT_WEBVIEW_PID
+    gosu electric-webview "${ELECTRIC_WEBVIEW_COMMAND[@]}" &
+    ELECTRIC_WEBVIEW_PID=$!
+    wait $ELECTRIC_WEBVIEW_PID
 }
 
 case "$1" in
