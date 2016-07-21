@@ -62,8 +62,8 @@ alias @subscribe="__electric_webview_send subscribe true $@"
 alias idle_time="__electric_webview_send idle_time false"
 alias @idle_time="__electric_webview_send idle_time true"
 
-alias block_activity="__electric_webview_send block_activity false $@"
-alias @block_activity="__electric_webview_send block_activity true $@"
+alias block_user_activity="__electric_webview_send block_user_activity false $@"
+alias @block_user_activity="__electric_webview_send block_user_activity true $@"
 
 alias get_html="__electric_webview_get_html false $@"
 alias @get_html="__electric_webview_get_html true $@"
