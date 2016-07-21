@@ -222,6 +222,18 @@ name and returned data, separated by space.
 * `quit [code]`
   - Tells the application to exit with a return `code`.
 
+# HTTP API
+
+First of all, you must run the HTTP server, which is invoked with the following command:
+
+```
+$PREFIX/share/electric-webview/httpserver.py
+```
+
+> Where `$PREFIX` is the prefix where you installed Electric WebView.
+
+See [HTTP API Endpoints](docs/http_api_endpoints.md) for a list of all available endpoints.
+
 # Scripting
 
 You can use scripts with Electric WebView loading the following Shell script library file:
@@ -230,7 +242,7 @@ You can use scripts with Electric WebView loading the following Shell script lib
 $PREFIX/share/electric-webview/shellscript.sh
 ```
 
-Where `$PREFIX` is the prefix where you installed Electric WebView.
+> Where `$PREFIX` is the prefix where you installed Electric WebView.
 
 Before loading the library you must set `ELECTRIC_WEBVIEW_TRANSPORT` environment
 variable to the transport layer you are using in your instance of Electric WebView.

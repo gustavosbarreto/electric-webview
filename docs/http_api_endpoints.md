@@ -1,14 +1,4 @@
-# HTTP Server Documentation
-
-An HTTP interface for Electric WebView.
-
-### Usage
-
-```
-httpserver.py [-h] -t TRANSPORT -p PORT
-```
-
-## API
+## Electric WebView - HTTP API Endpoints
 
 **`GET`** `/load`
 
