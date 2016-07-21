@@ -1,5 +1,5 @@
 <RCC>
   <qresource prefix="/">
-    <file>../ctl/shellscript.sh</file>
+    <file>../../scripts/shellscript.sh</file>
   </qresource>
 </RCC>

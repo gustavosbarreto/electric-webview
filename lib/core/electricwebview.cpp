@@ -28,7 +28,7 @@ void ElectricWebView::runScript(const QString &transport, const QString &fileNam
     QProcessEnvironment env(QProcessEnvironment::systemEnvironment());
     env.insert("INSTANT_WEBVIEW_TRANSPORT", transport);
 
-    QFile aliasFile(":/ctl/shellscript.sh");
+    QFile aliasFile(":/scripts/shellscript.sh");
     aliasFile.open(QFile::ReadOnly);
 
     QFile scriptFile(fileName);
