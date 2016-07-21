@@ -11,11 +11,7 @@ function __electric_webview_send() {
   shift 2
 
   for arg in "$@"; do
-    if echo $arg | grep -q " "; then
-      ARGUMENTS="$ARGUMENTS \"$arg\""
-    else
       ARGUMENTS="$ARGUMENTS $arg"
-    fi
   done
 
   ARGUMENTS=$(echo $ARGUMENTS | sed 's/^ *//')
