@@ -109,9 +109,9 @@ void IpcServer::parseData(QPointer<IpcClient> client, const QByteArray &data)
         cmd.setName(args.first());
         cmd.setArguments(args.mid(1, -1));
         cmd.setClient(client);
-        cmd.setSingleShot(args.first().startsWith('@'));
+        cmd.setGetter(args.first().startsWith('@'));
 
-        if (cmd.isSingleShot())
+        if (cmd.isGetter())
             cmd.setName(cmd.name().mid(1));
 
         emit newCommand(cmd);

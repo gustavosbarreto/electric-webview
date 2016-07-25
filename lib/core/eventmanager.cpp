@@ -48,7 +48,7 @@ void EventManager::bind()
     connect(ElectricWebView::instance()->inputEventFilter(), &InputEventFilter::activity, [=](int idleTime) {
         foreach (const Event &event, m_subscribers["user_activity"]) {
             event.sendResponse(QString("%1").arg(idleTime).toUtf8());
-            if (event.isSingleShot())
+            if (event.isGetter())
                 m_subscribers[event.name()].removeOne(event);
         }
     });

@@ -1,7 +1,7 @@
 #include "command.hpp"
 
 Command::Command()
-    : m_singleShot(false)
+    : m_getter(false)
 {
 }
 
@@ -9,7 +9,7 @@ Command::Command(const Command &other)
 {
     m_name = other.m_name;
     m_arguments = other.m_arguments;
-    m_singleShot = other.m_singleShot;
+    m_getter = other.m_getter;
     m_client = other.m_client;
 }
 
@@ -33,14 +33,14 @@ QStringList Command::arguments() const
     return m_arguments;
 }
 
-void Command::setSingleShot(bool singleShot)
+void Command::setGetter(bool getter)
 {
-    m_singleShot = singleShot;
+    m_getter = getter;
 }
 
-bool Command::isSingleShot() const
+bool Command::isGetter() const
 {
-    return m_singleShot;
+    return m_getter;
 }
 
 void Command::setClient(QPointer<IpcClient> client)
@@ -60,12 +60,12 @@ void Command::sendResponse(const QByteArray &data) const
 
     QByteArray prefix;
 
-    if (!m_singleShot)
+    if (!m_getter)
         prefix = m_name.toLocal8Bit() + " ";
 
     m_client->write(prefix + data + "\n");
 
-    if (m_singleShot)
+    if (m_getter)
         m_client->close();
 }
 
@@ -73,11 +73,11 @@ void Command::operator =(const Command &other)
 {
     m_name = other.m_name;
     m_arguments = other.m_arguments;
-    m_singleShot = other.m_singleShot;
+    m_getter = other.m_getter;
     m_client = other.m_client;
 }
 
 bool Command::operator ==(const Command &other)
 {
-    return m_name == other.m_name && m_arguments == other.m_arguments && m_singleShot == other.m_singleShot && m_client == other.m_client;
+    return m_name == other.m_name && m_arguments == other.m_arguments && m_getter == other.m_getter && m_client == other.m_client;
 }

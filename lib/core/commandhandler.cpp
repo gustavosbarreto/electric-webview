@@ -71,7 +71,7 @@ void CommandHandler::processCommand(const Command &command) const
                 if (!command.client().isNull()) {
                     command.sendResponse(QUrl::toPercentEncoding(html));
 
-                    if (command.isSingleShot())
+                    if (command.isGetter())
                         command.client()->close();
                 }
                 loop.quit();
@@ -81,7 +81,7 @@ void CommandHandler::processCommand(const Command &command) const
                 if (!command.client().isNull()) {
                     command.sendResponse(QUrl::toPercentEncoding(text));
 
-                    if (command.isSingleShot())
+                    if (command.isGetter())
                         command.client()->close();
                 }
                 loop.quit();
@@ -173,7 +173,7 @@ void CommandHandler::processJavaScriptCommand(const Command &command) const
         if (!command.client().isNull()) {
             command.sendResponse(QUrl::toPercentEncoding(out.toString()));
 
-            if (command.isSingleShot())
+            if (command.isGetter())
                 command.client()->close();
         }
         loop.quit();

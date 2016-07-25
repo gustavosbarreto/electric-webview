@@ -87,7 +87,8 @@ Electric WebView reads commands from TCP, Unix Socket or WebSocket. Each command
 with the name of a command and is terminated by a newline. Empty line are interpreted
 as end of connection.
 
-If the command starts with `@` the command is marked as single-shot.
+If the command starts with `@` the command is marked as getter. See the [Getter commands][#Getter commands]
+for defails.
 
 Due to the simplicity of the protocol, it is possible to interact with the WebView
 using the command-line utility GNU Netcat. However, there is `electric-webview-ctl`
@@ -98,29 +99,37 @@ Simple example using the GNU Netcat utility to demonstrate how simple is the pro
 
 ```sh
 echo "open maximized" | nc -U /tmp/electric-webview
-echo "load http://google.com" | nc -U /tmp/electric-webview
+echo "load http://github.com" | nc -U /tmp/electric-webview
 ```
 
-In the below example a maximized window is open and the http://google.com is loaded.
+In the below example a maximized window is open and the http://github.com is loaded.
 
 See the [Scripting section](#Scripting) for details on how to use scripts.
 
-## Single-shot commands
+## Getter commands
 
-Single-shot commands might be used to wait until command response is received.
-It might be useful to get data from the WebView using both `electric-webview-ctl`
-and GNU Netcat utility.
+Commands starting with `@` are marked as getter.
+
+Getter commands might be useful when you want to retrieve data from a Electric WebView
+instance.
+
+Example:
 
 ```sh
-URL=$(echo "@current_url" | electric-webview-ctl -t unixsocket:/tmp/electric-webview)
+URL=$(echo "@current_url" | electric-webview-ctl -t unixsocket:/tmp/electric-webview -)
 echo "The current URL is $URL"
 ```
+
+In the below example, the response is "http://github.com".
+
+Note that if you replace `@current_url` with `current_url` in the below example, the
+response is empty because the command `current_url` is not marked as getter.
 
 ## Command response
 
 The response of a command may vary according the type of command. If the command is
-marked as single-shot, the response only contains the returned data from the command,
-otherwise it is not a single-shot command, the response is composed of the command
+marked as getter, the response only contains the returned data from the command,
+otherwise it is not a getter command, the response is composed of the command
 name and returned data, separated by space.
 
 **Note that not all commands have a response.**
@@ -257,5 +266,5 @@ ELECTRIC_WEBVIEW_TRANSPORT=unixsocket:/tmp/electric-webview
 . /usr/share/electric-webview/shellscript.sh
 
 open maximized
-load http://google.com
+load http://github.com
 ```

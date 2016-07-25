@@ -18,8 +18,8 @@ public:
     void setArguments(const QStringList &arguments);
     QStringList arguments() const;
 
-    void setSingleShot(bool singleShot);
-    bool isSingleShot() const;
+    void setGetter(bool getter);
+    bool isGetter() const;
 
     void setClient(QPointer<IpcClient> client);
     QPointer<IpcClient> client() const;
@@ -32,7 +32,7 @@ public:
 private:
     QString m_name;
     QStringList m_arguments;
-    bool m_singleShot;
+    bool m_getter;
     QPointer<IpcClient> m_client;
 };
 
