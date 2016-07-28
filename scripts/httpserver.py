@@ -7,6 +7,8 @@ import socket
 import SocketServer
 import re
 import argparse
+import os
+import subprocess
 
 from electricwebview import WebView
 
@@ -22,9 +24,10 @@ events = [
 ]
 
 parser = argparse.ArgumentParser(description='Electric WebView HTTP Interface')
+parser.add_argument('host', metavar='HOST', type=str, nargs=None, help='Host address to listen')
+parser.add_argument('port', metavar='PORT', type=int, nargs=None, help='Port to listen')
 parser.add_argument('-t', '--transport', type=str, required=True, help='Transport layer')
-parser.add_argument('-a', '--address', type=str, required=True, help='Address to listen')
-parser.add_argument('-p', '--port', type=int, required=True, help='Port to listen')
+parser.add_argument('-a', '--auth', type=str, required=False, help='Authentication script')
 args = parser.parse_args()
 
 class CommandsHandler(BaseHTTPServer.BaseHTTPRequestHandler):
@@ -42,6 +45,23 @@ class CommandsHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         url = urlparse.urlparse(self.path)
         query = urlparse.parse_qs(url.query)
         webview = WebView(args.transport)
+
+        auth_env = os.environ.copy()
+        auth_env['REQUEST_URI'] = url.path
+        auth_env['QUERY_STRING'] = url.query
+        auth_env['REQUEST_METHOD'] = 'GET'
+
+        for name, value in sorted(self.headers.items()):
+            name = name.upper().replace('-', '_')
+            value = value.rstrip()
+            auth_env['HTTP_' + name] = value
+
+        if args.auth:
+            auth = subprocess.Popen(args.auth, env=auth_env)
+            auth.wait()
+            if auth.returncode == 1:
+                self.send_error("", 401)
+                return
 
         if url.path == '/load':
             url_param = query.get('url', [''])[0]
@@ -104,6 +124,7 @@ class CommandsHandler(BaseHTTPServer.BaseHTTPRequestHandler):
             region_param = query.get('region', [''])[0]
             reply = webview.screenshot(region_param)
             self.send_reply(reply)
+            return
 
         if url.path == '/get_html':
             format_param = query.get('format', [''])[0]
@@ -181,11 +202,15 @@ class CommandsHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 
             reply = webview.exec_cmd(execution_param, cmd_param, args=args_param.split())
             self.send_reply(reply)
+            return
 
         if url.path == '/quit':
             code_param = query.get('code', [''])[0]
             webview.quit(code_param)
             self.send_reply()
+            return
+
+        self.send_error("", 404)
 
     def do_POST(self):
         url = urlparse.urlparse(self.path)
@@ -215,5 +240,5 @@ class CommandsHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 class ThreadedHTTPServer(SocketServer.ThreadingMixIn, BaseHTTPServer.HTTPServer):
     pass
 
-httpd = ThreadedHTTPServer((args.address, args.port), CommandsHandler)
+httpd = ThreadedHTTPServer((args.host, args.port), CommandsHandler)
 httpd.serve_forever()
