@@ -81,6 +81,22 @@ Arguments:
 echo "open maximized" | electric-webview-ctl -t unixsocket:/tmp/electric-webview -
 ```
 
+# Transports
+
+This section describes the available transports with their keywords, parameters, and semantics.
+
+**`unixsocket:<filename>`**
+
+Listens on <filename> using a UNIX domain stream socket for commands.
+
+**`tcp:<host>:<port>`**
+
+Listen on <host>:<port> using a TCP/IP connection for commands.
+
+**`websocket:<host>:<port>`**
+
+Listen on <host>:<port> using a WebSocket connection for commands.
+
 # Commands
 
 Electric WebView reads commands from TCP, Unix Socket or WebSocket. Each command starts
