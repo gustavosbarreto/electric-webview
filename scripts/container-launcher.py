@@ -54,6 +54,7 @@ if args.x11:
 
 docker_run_options += ['-e', 'RESOLUTION=%s' %  args.resolution]
 docker_run_options += ['-e', 'LOCAL_USER=%s' % os.getuid()]
+docker_run_options += ['-e', 'SCRIPT=%s' % args.script]
 
 docker = subprocess.Popen(['docker', 'run'] + docker_run_options + [docker_image, 'run', args.transport])
 

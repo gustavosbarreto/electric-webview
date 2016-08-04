@@ -44,7 +44,7 @@ function run() {
         /usr/src/electric-webview/scripts/httpserver.py -t unixsocket:/tmp/electric-webview -a $ADDRESS -p $PORT &
         echo "http: Listening on port $PORT"
     else
-        ELECTRIC_WEBVIEW_COMMAND=(/usr/local/bin/electric-webview -t $TRANSPORT)
+        ELECTRIC_WEBVIEW_COMMAND=(/usr/local/bin/electric-webview -t $TRANSPORT -s "$SCRIPT")
     fi
 
     if [ -z "$XAUTH" ]; then
