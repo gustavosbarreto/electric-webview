@@ -13,6 +13,7 @@ parser.add_argument('-s', '--script', required=False, help='Script to run')
 args = parser.parse_args()
 
 docker_image = os.environ.get('DOCKER_IMAGE', 'gustavosbarreto/electric-webview')
+docker_user_options = os.environ.get('DOCKER_OPTIONS', '').split(' ')
 docker_run_options = ['--rm']
 
 if args.script:
@@ -55,6 +56,7 @@ if args.x11:
 docker_run_options += ['-e', 'RESOLUTION=%s' %  args.resolution]
 docker_run_options += ['-e', 'LOCAL_USER=%s' % os.getuid()]
 docker_run_options += ['-e', 'SCRIPT=%s' % args.script]
+docker_run_options += docker_user_options
 
 docker = subprocess.Popen(['docker', 'run'] + docker_run_options + [docker_image, 'run', args.transport])
 
