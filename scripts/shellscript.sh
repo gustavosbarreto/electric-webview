@@ -1,3 +1,5 @@
+shopt -s expand_aliases
+
 if [ -z "$ELECTRIC_WEBVIEW_TRANSPORT" ]; then
   echo "You need to set ELECTRIC_WEBVIEW_TRANSPORT"
   exit 1
