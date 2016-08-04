@@ -58,7 +58,7 @@ void ElectricWebView::runScript(const QString &transport, const QString &fileNam
     });
 
     process->setProcessEnvironment(env);
-    process->start("sh", QStringList() << file->fileName());
+    process->start("bash", QStringList() << file->fileName());
 }
 
 ElectricWebView::ElectricWebView()
