@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QPointer>
 
-#include <ipc/ipcclient.hpp>
+#include <command/commandclient.hpp>
 
 class Command
 {
@@ -21,8 +21,8 @@ public:
     void setGetter(bool getter);
     bool isGetter() const;
 
-    void setClient(QPointer<IpcClient> client);
-    QPointer<IpcClient> client() const;
+    void setClient(QPointer<CommandClient> client);
+    QPointer<CommandClient> client() const;
 
     void sendResponse(const QByteArray &data) const;
 
@@ -33,7 +33,7 @@ private:
     QString m_name;
     QStringList m_arguments;
     bool m_getter;
-    QPointer<IpcClient> m_client;
+    QPointer<CommandClient> m_client;
 };
 
 #endif // COMMAND_HPP

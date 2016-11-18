@@ -1,26 +1,26 @@
-#ifndef IPCSERVER_HPP
-#define IPCSERVER_HPP
+#ifndef COMMANDSERVER_HPP
+#define COMMANDSERVER_HPP
 
 #include <QObject>
 #include <QStringList>
 #include <QVariantMap>
 #include <QPointer>
 
-#include "ipcclient.hpp"
+#include "commandclient.hpp"
 
 #include <core/command.hpp>
 
 class QTcpServer;
 class QTcpSocket;
 
-class IpcTransportLayer;
+class CommandTransportLayer;
 
-class IpcServer: public QObject
+class CommandServer: public QObject
 {
     Q_OBJECT
 
 public:
-    IpcServer(QObject *parent = 0);
+    CommandServer(QObject *parent = 0);
 
     void initialize();
 
@@ -29,20 +29,20 @@ public:
     void setReverseId(const QString &id);
     void setTransport(const QString &transport);
 
-    void sendReply(QPointer<IpcClient> client, const QByteArray &data);
+    void sendReply(QPointer<CommandClient> client, const QByteArray &data);
 
 signals:
     void newCommand(const Command &command);
 
 private:
-    void parseData(QPointer<IpcClient> client, const QByteArray &data);
+    void parseData(QPointer<CommandClient> client, const QByteArray &data);
 
 private:
     bool m_reverse;
     QString m_reverseId;
     QString m_transport;
-    IpcTransportLayer *m_transportLayer;
-    IpcClient *m_reverseTransport;
+    CommandTransportLayer *m_transportLayer;
+    CommandClient *m_reverseTransport;
 };
 
-#endif // IPCSERVER_HPP
+#endif // COMMANDSERVER_HPP

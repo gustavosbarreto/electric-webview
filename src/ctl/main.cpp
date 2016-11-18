@@ -8,9 +8,9 @@
 
 #include <unistd.h>
 
-#include <transport/unixsocket/unixsocketipctransport.hpp>
-#include <transport/tcp/tcpipctransport.hpp>
-#include <transport/websocket/websocketipctransport.hpp>
+#include <transport/unixsocket/unixsocketcommandtransport.hpp>
+#include <transport/tcp/tcpcommandtransport.hpp>
+#include <transport/websocket/websocketcommandtransport.hpp>
 
 int main(int argc, char *argv[])
 {
@@ -21,26 +21,26 @@ int main(int argc, char *argv[])
     cmdParser.setApplicationDescription("Electric WebView is a scriptable WebView for developers.");
     cmdParser.addHelpOption();
     cmdParser.addVersionOption();
-    cmdParser.addOption(QCommandLineOption(QStringList() << "t" << "transport", "IPC Transport Layer to use.", "tcp|unixsocket|websocket"));
+    cmdParser.addOption(QCommandLineOption(QStringList() << "t" << "transport", "Command Transport Layer to use.", "tcp|unixsocket|websocket"));
     cmdParser.addPositionalArgument("command", "Command to execute. Pass \"-\" to read from stdin.");
     cmdParser.process(app.arguments());
 
     if (cmdParser.value("transport").isEmpty()) {
-        qDebug().noquote() << "You must provide a IPC transport layer";
+        qDebug().noquote() << "You must provide a command transport layer";
         return -1;
     }
 
     QStringList transportOptions =  cmdParser.value("transport").split(":");
     QString transportLayerName = transportOptions.first();
 
-    IpcClient *client = NULL;
+    CommandClient *client = NULL;
 
     if (transportLayerName == "unixsocket") {
-        client = UnixSocketIpcClient::newClient(transportOptions);
+        client = UnixSocketCommandClient::newClient(transportOptions);
     } else if (transportLayerName == "tcp") {
-        client = TcpIpcClient::newClient(transportOptions);
+        client = TcpCommandClient::newClient(transportOptions);
     } else if (transportLayerName == "websocket") {
-        client = WebSocketIpcClient::newClient(transportOptions);
+        client = WebSocketCommandClient::newClient(transportOptions);
     }
 
     QString command = cmdParser.positionalArguments().join(' ');
@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    QObject::connect(client, &IpcClient::connected, [client, command]() {
+    QObject::connect(client, &CommandClient::connected, [client, command]() {
         client->write(command.toLocal8Bit());
 
         if (!command.startsWith('@')) {
@@ -68,13 +68,13 @@ int main(int argc, char *argv[])
         }
     });
 
-    QObject::connect(client, &IpcClient::disconnected, [=]() {
+    QObject::connect(client, &CommandClient::disconnected, [=]() {
         QTimer::singleShot(0, [=]() {
             QCoreApplication::exit(-1);
         });
     });
 
-    QObject::connect(client, &IpcClient::newData, [=](const QByteArray &data) {
+    QObject::connect(client, &CommandClient::newData, [=](const QByteArray &data) {
         QTextStream out(stdout);
         out << data;
     });

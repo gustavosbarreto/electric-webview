@@ -7,31 +7,31 @@ INCLUDEPATH += \
     $$PWD/../
 
 SOURCES += \
-    $$PWD/../ipc/ipctransportlayer.cpp
+    $$PWD/../command/commandtransportlayer.cpp
 
 HEADERS += \
-    $$PWD/../ipc/ipctransportlayer.hpp
+    $$PWD/../command/commandtransportlayer.hpp
 
 # TCP transport
 
 SOURCES += \
-    $$PWD/tcp/tcpipctransport.cpp
+    $$PWD/tcp/tcpcommandtransport.cpp
 
 HEADERS += \
-    $$PWD/tcp/tcpipctransport.hpp
+    $$PWD/tcp/tcpcommandtransport.hpp
 
 # Unix Socket transport
 
 SOURCES += \
-    $$PWD/unixsocket/unixsocketipctransport.cpp
+    $$PWD/unixsocket/unixsocketcommandtransport.cpp
 
 HEADERS += \
-    $$PWD/unixsocket/unixsocketipctransport.hpp
+    $$PWD/unixsocket/unixsocketcommandtransport.hpp
 
 # WebSocket
 
 SOURCES += \
-    $$PWD/websocket/websocketipctransport.cpp
+    $$PWD/websocket/websocketcommandtransport.cpp
 
 HEADERS += \
-    $$PWD/websocket/websocketipctransport.hpp
+    $$PWD/websocket/websocketcommandtransport.hpp

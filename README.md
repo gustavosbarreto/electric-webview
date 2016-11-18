@@ -44,7 +44,7 @@ Electric WebView is a scriptable WebView for developers.
 Options:
   -h, --help                                  Displays this help.
   -v, --version                               Displays version information.
-  -t, --transport <tcp|unixsocket|websocket>  IPC Transport Layer to use.
+  -t, --transport <tcp|unixsocket|websocket>  Command Transport Layer to use.
   -r, --reverse <ID>                          Enable reverse mode. The ID is
                                               used to identify your session in
                                               the server.
@@ -68,7 +68,7 @@ Electric WebView is a scriptable WebView for developers.
 Options:
   -h, --help                                  Displays this help.
   -v, --version                               Displays version information.
-  -t, --transport <tcp|unixsocket|websocket>  IPC Transport Layer to use.
+  -t, --transport <tcp|unixsocket|websocket>  Command Transport Layer to use.
 
 Arguments:
   command                                     Command to execute. Pass "-" to

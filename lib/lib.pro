@@ -1,3 +1,3 @@
 TEMPLATE = subdirs
-SUBDIRS += core ipc transport
+SUBDIRS += core command transport
 CONFIG += ordered

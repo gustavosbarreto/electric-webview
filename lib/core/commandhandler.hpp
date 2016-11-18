@@ -6,7 +6,7 @@
 
 #include "command.hpp"
 
-class IpcClient;
+class CommandClient;
 
 class CommandHandler: public QObject
 {

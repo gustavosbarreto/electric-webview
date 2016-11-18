@@ -13,17 +13,17 @@ LIBS += \
 # Server
 
 SOURCES += \
-    $$PWD/ipcserver.cpp
+    $$PWD/commandserver.cpp
 
 HEADERS += \
-    $$PWD/ipcserver.hpp
+    $$PWD/commandserver.hpp
 
 # Abstract classes
 
 SOURCES += \
-    $$PWD/ipcclient.cpp \
-    $$PWD/ipctransportlayer.cpp
+    $$PWD/commandclient.cpp \
+    $$PWD/commandtransportlayer.cpp
 
 HEADERS += \
-    $$PWD/ipcclient.hpp \
-    $$PWD/ipctransportlayer.hpp
+    $$PWD/commandclient.hpp \
+    $$PWD/commandtransportlayer.hpp

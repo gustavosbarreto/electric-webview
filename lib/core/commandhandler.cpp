@@ -12,7 +12,7 @@
 #include "electricwebview.hpp"
 #include "inputeventfilter.hpp"
 
-#include <ipc/ipcclient.hpp>
+#include <command/commandclient.hpp>
 
 CommandHandler::CommandHandler(QObject *parent)
     : QObject(parent)

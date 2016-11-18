@@ -43,12 +43,12 @@ bool Command::isGetter() const
     return m_getter;
 }
 
-void Command::setClient(QPointer<IpcClient> client)
+void Command::setClient(QPointer<CommandClient> client)
 {
     m_client = client;
 }
 
-QPointer<IpcClient> Command::client() const
+QPointer<CommandClient> Command::client() const
 {
     return m_client;
 }

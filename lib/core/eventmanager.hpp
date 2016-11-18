@@ -9,7 +9,7 @@
 
 class QWebEngineView;
 
-class IpcClient;
+class CommandClient;
 
 class EventManager: public QObject
 {

@@ -1,15 +1,15 @@
-#include "websocketipctransport.hpp"
+#include "websocketcommandtransport.hpp"
 
 #include <QWebSocketServer>
 #include <QWebSocket>
 #include <QTimer>
 #include <QCoreApplication>
 
-WebSocketIpcTransport::WebSocketIpcTransport()
+WebSocketCommandTransport::WebSocketCommandTransport()
 {
 }
 
-void WebSocketIpcTransport::initialize()
+void WebSocketCommandTransport::initialize()
 {
     QString host = m_options.value(1);
     QString port = m_options.value(2);
@@ -34,7 +34,7 @@ void WebSocketIpcTransport::initialize()
     connect(m_socketServer, &QWebSocketServer::newConnection, [=]() {
         QWebSocket *socket = m_socketServer->nextPendingConnection();
 
-        WebSocketIpcClient *client = new WebSocketIpcClient;
+        WebSocketCommandClient *client = new WebSocketCommandClient;
         client->setSocket(socket);
         client->initialize();
 
@@ -43,36 +43,36 @@ void WebSocketIpcTransport::initialize()
             client->deleteLater();
         });
 
-        connect(client, &WebSocketIpcClient::newData, [=](const QByteArray &data) {
+        connect(client, &WebSocketCommandClient::newData, [=](const QByteArray &data) {
             emit newData(client, data);
         });
     });
 }
 
-void WebSocketIpcTransport::sendReply(QPointer<IpcClient> client, const QByteArray &data)
+void WebSocketCommandTransport::sendReply(QPointer<CommandClient> client, const QByteArray &data)
 {
-    WebSocketIpcClient *webSocketIpcClient = qobject_cast<WebSocketIpcClient *>(client);
-    webSocketIpcClient->write(data);
+    WebSocketCommandClient *websocketClient = qobject_cast<WebSocketCommandClient *>(client);
+    websocketClient->write(data);
 }
 
-void WebSocketIpcClient::initialize()
+void WebSocketCommandClient::initialize()
 {
     connect(m_socket, &QWebSocket::textMessageReceived, [=](const QString &message) {
         emit newData(message.toLocal8Bit());
     });
 }
 
-void WebSocketIpcClient::close()
+void WebSocketCommandClient::close()
 {
     m_socket->close();
 }
 
-void WebSocketIpcClient::write(const QByteArray &data)
+void WebSocketCommandClient::write(const QByteArray &data)
 {
     m_socket->sendTextMessage(data);
 }
 
-IpcClient *WebSocketIpcClient::newClient(const QStringList &args, bool reverse)
+CommandClient *WebSocketCommandClient::newClient(const QStringList &args, bool reverse)
 {
     QVariantMap options;
     options["host"] = args.value(1);
@@ -80,7 +80,7 @@ IpcClient *WebSocketIpcClient::newClient(const QStringList &args, bool reverse)
 
     QWebSocket *socket = new QWebSocket();
 
-    WebSocketIpcClient *client = new WebSocketIpcClient;
+    WebSocketCommandClient *client = new WebSocketCommandClient;
     client->setSocket(socket);
     client->initialize();
 

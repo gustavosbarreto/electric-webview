@@ -1,4 +1,4 @@
-#include "unixsocketipctransport.hpp"
+#include "unixsocketcommandtransport.hpp"
 
 #include <QLocalServer>
 #include <QLocalSocket>
@@ -7,11 +7,11 @@
 #include <QFileInfo>
 #include <QDir>
 
-UnixSocketIpcTransport::UnixSocketIpcTransport()
+UnixSocketCommandTransport::UnixSocketCommandTransport()
 {
 }
 
-void UnixSocketIpcTransport::initialize()
+void UnixSocketCommandTransport::initialize()
 {
     QString name = m_options.value(1);
     QFileInfo fileInfo(name);
@@ -36,7 +36,7 @@ void UnixSocketIpcTransport::initialize()
     connect(m_server, &QLocalServer::newConnection, [=]() {
         QLocalSocket *socket = m_server->nextPendingConnection();
 
-        UnixSocketIpcClient *client = new UnixSocketIpcClient;
+        UnixSocketCommandClient *client = new UnixSocketCommandClient;
         client->setSocket(socket);
         client->initialize();
 
@@ -45,43 +45,43 @@ void UnixSocketIpcTransport::initialize()
             client->deleteLater();
         });
 
-        connect(client, &UnixSocketIpcClient::newData, [=](const QByteArray &data) {
+        connect(client, &UnixSocketCommandClient::newData, [=](const QByteArray &data) {
             emit newData(client, data);
         });
     });
 }
 
-void UnixSocketIpcTransport::sendReply(QPointer<IpcClient> client, const QByteArray &data)
+void UnixSocketCommandTransport::sendReply(QPointer<CommandClient> client, const QByteArray &data)
 {
-    UnixSocketIpcClient *unixSocketClient = qobject_cast<UnixSocketIpcClient *>(client);
+    UnixSocketCommandClient *unixSocketClient = qobject_cast<UnixSocketCommandClient *>(client);
     unixSocketClient->write(data);
 }
 
-void UnixSocketIpcClient::initialize()
+void UnixSocketCommandClient::initialize()
 {
     connect(m_socket, &QLocalSocket::readyRead, [=]() {
         emit newData(m_socket->readAll());
     });
 }
 
-void UnixSocketIpcClient::close()
+void UnixSocketCommandClient::close()
 {
     m_socket->disconnectFromServer();
 }
 
-void UnixSocketIpcClient::write(const QByteArray &data)
+void UnixSocketCommandClient::write(const QByteArray &data)
 {
     m_socket->write(data);
 }
 
-IpcClient *UnixSocketIpcClient::newClient(const QStringList &args, bool reverse)
+CommandClient *UnixSocketCommandClient::newClient(const QStringList &args, bool reverse)
 {
     QVariantMap options;
     options["name"] = args.value(1);
 
     QLocalSocket *socket = new QLocalSocket();
 
-    UnixSocketIpcClient *client = new UnixSocketIpcClient;
+    UnixSocketCommandClient *client = new UnixSocketCommandClient;
     client->setSocket(socket);
     client->initialize();
 

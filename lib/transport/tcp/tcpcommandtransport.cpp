@@ -1,15 +1,15 @@
-#include "tcpipctransport.hpp"
+#include "tcpcommandtransport.hpp"
 
 #include <QTcpServer>
 #include <QTcpSocket>
 #include <QTimer>
 #include <QCoreApplication>
 
-TcpIpcTransport::TcpIpcTransport()
+TcpCommandTransport::TcpCommandTransport()
 {
 }
 
-void TcpIpcTransport::initialize()
+void TcpCommandTransport::initialize()
 {
     QString host = m_options.value(1);
     QString port = m_options.value(2);
@@ -34,7 +34,7 @@ void TcpIpcTransport::initialize()
     connect(m_tcpServer, &QTcpServer::newConnection, [=]() {
         QTcpSocket *socket = m_tcpServer->nextPendingConnection();
 
-        TcpIpcClient *client = new TcpIpcClient;
+        TcpCommandClient *client = new TcpCommandClient;
         client->setSocket(socket);
         client->initialize();
 
@@ -43,36 +43,36 @@ void TcpIpcTransport::initialize()
             client->deleteLater();
         });
 
-        connect(client, &TcpIpcClient::newData, [=](const QByteArray &data) {
+        connect(client, &TcpCommandClient::newData, [=](const QByteArray &data) {
             emit newData(client, data);
         });
     });
 }
 
-void TcpIpcTransport::sendReply(QPointer<IpcClient> client, const QByteArray &data)
+void TcpCommandTransport::sendReply(QPointer<CommandClient> client, const QByteArray &data)
 {
-    TcpIpcClient *tcpIpcClient = qobject_cast<TcpIpcClient *>(client);
-    tcpIpcClient->write(data);
+    TcpCommandClient *tcpClient = qobject_cast<TcpCommandClient *>(client);
+    tcpClient->write(data);
 }
 
-void TcpIpcClient::initialize()
+void TcpCommandClient::initialize()
 {
     connect(m_socket, &QTcpSocket::readyRead, [=]() {
         emit newData(m_socket->readAll());
     });
 }
 
-void TcpIpcClient::close()
+void TcpCommandClient::close()
 {
     m_socket->disconnectFromHost();
 }
 
-void TcpIpcClient::write(const QByteArray &data)
+void TcpCommandClient::write(const QByteArray &data)
 {
     m_socket->write(data);
 }
 
-IpcClient *TcpIpcClient::newClient(const QStringList &args, bool reverse)
+CommandClient *TcpCommandClient::newClient(const QStringList &args, bool reverse)
 {
     QVariantMap options;
     options["host"] = args.value(1);
@@ -80,7 +80,7 @@ IpcClient *TcpIpcClient::newClient(const QStringList &args, bool reverse)
 
     QTcpSocket *socket = new QTcpSocket();
 
-    TcpIpcClient *client = new TcpIpcClient;
+    TcpCommandClient *client = new TcpCommandClient;
     client->setSocket(socket);
     client->initialize();
 
