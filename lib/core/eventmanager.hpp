@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QMap>
 #include <QList>
-
+#include <QWebEnginePage>
 #include "event.hpp"
 
 class QWebEngineView;
@@ -26,6 +26,10 @@ public:
 private:
     QWebEngineView *m_webView;
     QMap<QString, QList<Event> > m_subscribers;
+
+protected slots:
+
+    void featurePermissionRequested(const QUrl & securityOrigin, QWebEnginePage::Feature f);
 };
 
 #endif // EVENTMANAGER_HPP
