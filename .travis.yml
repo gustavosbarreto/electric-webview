@@ -7,12 +7,12 @@ compiler:
   - gcc
 
 install:
-  - sudo apt-add-repository -y ppa:beineri/opt-qt561-trusty
+  - sudo apt-add-repository -y ppa:beineri/opt-qt571-trusty
   - sudo apt-add-repository -y ppa:ubuntu-toolchain-r/test
   - sudo apt-get update -qq
   - sudo apt-get install -qq gcc-6 g++-6
-  - sudo apt-get install -qq qt56tools qt56script qt56webengine qt56webchannel qt56websockets qt56declarative qt56x11extras
+  - sudo apt-get install -qq qt57tools qt57script qt57webengine qt57webchannel qt57websockets qt57declarative qt57x11extras
 
 script:
-  - /opt/qt56/bin/qmake QMAKE_CXXFLAGS+="-Wextra -Werror" QMAKE_CXX="g++-6"
+  - /opt/qt57/bin/qmake QMAKE_CXXFLAGS+="-Wextra -Werror" QMAKE_CXX="g++-6"
   - make || exit 1
