@@ -12,10 +12,17 @@ EventManager::EventManager(QObject *parent)
 {
 }
 
+
+void EventManager::featurePermissionRequested(const QUrl & securityOrigin, QWebEnginePage::Feature f) {
+    ElectricWebView::instance()->webView()->page()->setFeaturePermission(ElectricWebView::instance()->webView()->page()->url(), f, QWebEnginePage::PermissionGrantedByUser);
+}
+
 void EventManager::bind()
 {
     QWebEngineView *webView = ElectricWebView::instance()->webView();
 
+    connect(webView->page(), SIGNAL(featurePermissionRequested(const QUrl&, QWebEnginePage::Feature)),
+            SLOT(featurePermissionRequested(const QUrl&, QWebEnginePage::Feature)));
     // url_changed EVENT
     connect(webView, &QWebEngineView::urlChanged, [=](const QUrl &url) {
         foreach (const Event &event, m_subscribers["url_changed"]) {
