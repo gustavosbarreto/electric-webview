@@ -26,10 +26,6 @@ public:
 private:
     QWebEngineView *m_webView;
     QMap<QString, QList<Event> > m_subscribers;
-
-protected slots:
-
-    void featurePermissionRequested(const QUrl & securityOrigin, QWebEnginePage::Feature f);
 };
 
 #endif // EVENTMANAGER_HPP
