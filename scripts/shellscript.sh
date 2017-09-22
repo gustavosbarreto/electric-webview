@@ -66,8 +66,11 @@ alias @block_user_activity="__electric_webview_send block_user_activity true $@"
 alias get_html="__electric_webview_get_html false $@"
 alias @get_html="__electric_webview_get_html true $@"
 
-alias exec_cmd="__electric_webview_send exec_cmd false $@"
-alias @exec_cmd="__electric_webview_send exec_cmd true $@"
+alias accept_feature_request="__electric_webview_send accept_feature_request false $@"
+alias @accept_feature_request="__electric_webview_send accept_feature_request true $@"
+
+alias reject_feature_request="__electric_webview_send reject_feature_request false $@"
+alias @reject_feature_request="__electric_webview_send reject_feature_request true $@"
 
 alias quit="__electric_webview_send quit false $@"
 alias @quit="__electric_webview_send quit true $@"

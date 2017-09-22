@@ -105,7 +105,8 @@ void CommandHandler::processCommand(const Command &command) const
                 << "user_activity"
                 << "info_message_raised"
                 << "warning_message_raised"
-                << "error_message_raised";
+                << "error_message_raised"
+                << "feature_permission_requested";
 
         if (events.contains(eventName)) {
             Event event(command);
@@ -131,6 +132,24 @@ void CommandHandler::processCommand(const Command &command) const
         } else {
             QProcess::startDetached(command.arguments().mid(1, -1).join(' '));
         }
+    } else if (command.name() == "accept_feature_request" || command.name() == "reject_feature_request") {
+        QMap<QString, QWebEnginePage::Feature> features;
+        features["geolocation"] = QWebEnginePage::Geolocation;
+        features["audio_capture"] = QWebEnginePage::MediaAudioCapture;
+        features["video_capture"] = QWebEnginePage::MediaVideoCapture;
+        features["audio_video_capture"] = QWebEnginePage::MediaAudioVideoCapture;
+        features["mouse_lock"] = QWebEnginePage::MouseLock;
+
+        QUrl securityOrigin(command.arguments().value(1));
+        QWebEnginePage::Feature feature = features[command.arguments().value(0)];
+        QWebEnginePage::PermissionPolicy policy;
+
+        if (command.name() == "accept_feature_request")
+            policy = QWebEnginePage::PermissionGrantedByUser;
+        else
+            policy = QWebEnginePage::PermissionDeniedByUser;
+
+        ElectricWebView::instance()->webView()->page()->setFeaturePermission(securityOrigin, feature, policy);
     } else if (command.name() == "quit") {
         int exitCode = command.arguments().value(0).toInt();
         qApp->exit(exitCode);

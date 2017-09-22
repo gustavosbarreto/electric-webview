@@ -16,10 +16,6 @@ void EventManager::bind()
 {
     QWebEngineView *webView = ElectricWebView::instance()->webView();
 
-    connect(webView->page(), &QWebEnginePage::featurePermissionRequested, [=](const QUrl &securityOrigin, QWebEnginePage::Feature feature) {
-        webView->page()->setFeaturePermission(securityOrigin, feature, QWebEnginePage::PermissionGrantedByUser);
-    });
-
     // url_changed EVENT
     connect(webView, &QWebEngineView::urlChanged, [=](const QUrl &url) {
         foreach (const Event &event, m_subscribers["url_changed"]) {
@@ -54,6 +50,20 @@ void EventManager::bind()
             event.sendResponse(QString("%1").arg(idleTime).toUtf8());
             if (event.isGetter())
                 m_subscribers[event.name()].removeOne(event);
+        }
+    });
+
+    // feature_permission_requested EVENT
+    connect(webView->page(), &QWebEnginePage::featurePermissionRequested, [=](const QUrl &securityOrigin, QWebEnginePage::Feature feature) {
+        QMap<QWebEnginePage::Feature, QString> features;
+        features[QWebEnginePage::Geolocation] = "geolocation";
+        features[QWebEnginePage::MediaAudioCapture] = "audio_capture";
+        features[QWebEnginePage::MediaVideoCapture] = "video_capture";
+        features[QWebEnginePage::MediaAudioVideoCapture] = "audio_video_capture";
+        features[QWebEnginePage::MouseLock] = "mouse_lock";
+
+        foreach (const Event &event, m_subscribers["feature_permission_requested"]) {
+            event.sendResponse(QString("%1 %2").arg(features[feature]).arg(securityOrigin.toString()).toUtf8());
         }
     });
 }
