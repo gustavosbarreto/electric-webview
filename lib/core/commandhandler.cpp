@@ -1,6 +1,8 @@
 #include "commandhandler.hpp"
 
 #include <QWebEngineView>
+#include <QWebEngineScript>
+#include <QWebEngineScriptCollection>
 #include <QFile>
 #include <QEventLoop>
 #include <QBuffer>
@@ -116,6 +118,37 @@ void CommandHandler::processCommand(const Command &command) const
         }
     } else if (command.name() == "exec_js") {
         processJavaScriptCommand(command);
+    } else if (command.name() == "inject_js") {
+        QMap<QString, QWebEngineScript::ScriptWorldId> worlds;
+        worlds["main"] = QWebEngineScript::MainWorld;
+        worlds["application"] = QWebEngineScript::ApplicationWorld;
+        worlds["user"] = QWebEngineScript::UserWorld;
+
+        QMap<QString, QWebEngineScript::InjectionPoint> injectionPoints;
+        injectionPoints["document_creation"] = QWebEngineScript::DocumentCreation;
+        injectionPoints["document_ready"] = QWebEngineScript::DocumentReady;
+        injectionPoints["deferred"] = QWebEngineScript::Deferred;
+
+        QWebEngineScript::ScriptWorldId world = worlds[command.arguments().value(0)];
+        QWebEngineScript::InjectionPoint injectionPoint = injectionPoints[command.arguments().value(1)];
+
+        QWebEngineScript script;
+        script.setWorldId(world);
+        script.setInjectionPoint(injectionPoint);
+
+        QString source = command.arguments().value(2);
+        QString value = command.arguments().mid(3, -1).join(' ');
+
+        if (source == "string") {
+            script.setSourceCode(value);
+        } else if (source == "file") {
+            QFile file(value);
+            file.open(QFile::ReadOnly);
+
+            script.setSourceCode(file.readAll());
+        }
+
+        ElectricWebView::instance()->webView()->page()->scripts().insert(script);
     } else if (command.name() == "idle_time") {
         command.sendResponse(QString("%1").arg(ElectricWebView::instance()->inputEventFilter()->idle()).toLocal8Bit());
     } else if (command.name() == "block_user_activity") {

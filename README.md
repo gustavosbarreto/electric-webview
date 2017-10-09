@@ -201,6 +201,23 @@ name and returned data, separated by space.
     a path to a file to load, otherwise `string` is given, the value `VALUE`
     is executed as JavaScript code.
 
+* `inject_js <WORLD> <INJECTION_POINT> <string|file> <SOURCE>`
+   - Injects JavaScript from `SOURCE` into `WORLD` at `INJECTION_POINT`.
+     If `file` is given, the `SOURCE` is interpreted as a path to a file to load,
+     otherwise `string` is given, the value `SOURCE` is executed as JavaScript code.
+
+  Possible values for `WORLD`:
+  * `main`
+  * `application`
+  * `user`
+
+  Possible values for `INJECTION_POINT`:
+  * `document_creation`
+  * `document_ready`
+  * `deferred`
+
+  For detailed information, please refer to [Qt documentation](http://doc.qt.io/qt-5/qwebenginescript.html)
+
 ## Events
 
 * `subscribe <VALUE>`
