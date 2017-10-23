@@ -3,8 +3,7 @@ CONFIG += staticlib
 
 QT += webenginewidgets
 
-INCLUDEPATH += \
-    $$PWD/../ \
+INCLUDEPATH += $$PWD/../
 
 SOURCES += \
     $$PWD/eventmanager.cpp \
