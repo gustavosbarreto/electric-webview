@@ -4,6 +4,9 @@ CONFIG += c++11
 
 TARGET = electric-webview-ctl
 
+INCLUDEPATH += \
+    $$PWD/../../lib
+
 SOURCES += \
     main.cpp
 
