@@ -6,7 +6,11 @@
 #include <QDebug>
 #include <QFile>
 
+#ifdef _WIN64
+#include <io.h>
+#else
 #include <unistd.h>
+#endif
 
 #include <transport/unixsocket/unixsocketcommandtransport.hpp>
 #include <transport/tcp/tcpcommandtransport.hpp>
